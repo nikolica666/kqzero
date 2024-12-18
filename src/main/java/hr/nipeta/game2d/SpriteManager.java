@@ -58,7 +58,7 @@ public class SpriteManager {
         );
 
         this.ITEM_SPRITES = Map.of(
-                COIN, resizedSpriteFromResource("/sprites/items/coin2.png"),
+                COIN, resizedSpriteFromResource("/sprites/items/coin3.png"),
                 KEY, resizedSpriteFromResource("/sprites/items/key2.png"),
                 DOOR, resizedSpriteFromResource("/sprites/items/door.png")
         );
