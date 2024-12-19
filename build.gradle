@@ -27,5 +27,5 @@ javafx {
 }
 
 application {
-    mainClass = 'hr.nipeta.game2d.Main'
+    mainClass = 'hr.nipeta.kqzero.Main'
 }
