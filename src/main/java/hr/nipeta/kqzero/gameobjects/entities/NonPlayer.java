@@ -1,44 +1,47 @@
-package hr.nipeta.kqzero.items;
+package hr.nipeta.kqzero.gameobjects.entities;
 
 import hr.nipeta.kqzero.DebugConfig;
 import hr.nipeta.kqzero.GameManager;
+import hr.nipeta.kqzero.SpriteManager;
 import hr.nipeta.kqzero.collision.CollisionTolerance;
-import hr.nipeta.kqzero.entities.Entity;
+import hr.nipeta.kqzero.movement.Movement;
+import hr.nipeta.kqzero.world.tiles.Tile;
 import javafx.scene.paint.Color;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 
-public abstract class Item {
+import java.util.Set;
 
-    protected GameManager gm;
-    public Double worldTileX, worldTileY;
-    public final CollisionTolerance collisionTolerance;
+public abstract class NonPlayer extends Entity {
 
-    public Item(GameManager gm, Double worldTileX, Double worldTileY) {
-        this.gm = gm;
-        this.worldTileX = worldTileX;
-        this.worldTileY = worldTileY;
-        this.collisionTolerance = new CollisionTolerance(0.1d);
+    protected NonPlayer(GameManager gm, double worldTileX, double worldTileY, CollisionTolerance collisionTolerance, Set<Tile> collidesWith, Movement movement) {
+        super(gm, worldTileX, worldTileY, collisionTolerance, collidesWith, movement);
     }
 
+    @Override
     public final void draw() {
 
         double relativeToPlayerX = gm.player.worldTileX - this.worldTileX;
-        double relativeToPlayerY = gm.player.worldTileY - this.worldTileY;
-
         if (Math.abs(relativeToPlayerX) > (double) gm.world.COLS_TOTAL / 2) {
             return;
         }
 
+        double relativeToPlayerY = gm.player.worldTileY - this.worldTileY;
         if (Math.abs(relativeToPlayerY) > (double) gm.world.ROWS_TOTAL / 2) {
             return;
         }
 
-        gm.gc.drawImage(
-                gm.spriteManager.getItem(this),
-                gm.CENTRAL_TILE_TOP_LEFT_X - relativeToPlayerX * gm.TILE_SIZE,
-                gm.CENTRAL_TILE_TOP_LEFT_Y - relativeToPlayerY * gm.TILE_SIZE);
+        // TODO possible optimization? We have to call spriteManager only when sprite will change, not every time...
+        SpriteManager.SpriteSheetResult spriteSheetInfo = gm.spriteManager.calculateNonPlayerEntitySpriteSheet(this);
 
+        gm.gc.drawImage(
+                spriteSheetInfo.getSpriteSheet(),
+                spriteSheetInfo.getSource().getMinX(),
+                spriteSheetInfo.getSource().getMinY(),
+                spriteSheetInfo.getSource().getWidth(),
+                spriteSheetInfo.getSource().getHeight(),
+                gm.CENTRAL_TILE_TOP_LEFT_X - relativeToPlayerX * gm.TILE_SIZE,
+                gm.CENTRAL_TILE_TOP_LEFT_Y - relativeToPlayerY * gm.TILE_SIZE,
+                gm.TILE_SIZE,
+                gm.TILE_SIZE);
 
         if (DebugConfig.drawEntityCollisionBorder) {
             drawCollisionBorder(relativeToPlayerX, relativeToPlayerY);
@@ -58,10 +61,5 @@ public abstract class Item {
         gm.gc.strokeRect(topLeftX, topLeftY, width, height);
 
     }
-
-    public abstract boolean isCollectable(Entity entity);
-    public abstract boolean isSolid();
-
-    public abstract String getName();
 
 }

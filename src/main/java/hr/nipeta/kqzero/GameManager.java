@@ -4,14 +4,14 @@ import hr.nipeta.kqzero.collision.CollisionManager;
 import hr.nipeta.kqzero.drawers.GeekStatsOverlayDrawer;
 import hr.nipeta.kqzero.drawers.HelpOverlayDrawer;
 import hr.nipeta.kqzero.drawers.MessageDrawer;
-import hr.nipeta.kqzero.entities.*;
-import hr.nipeta.kqzero.entities.enemies.BlobLight;
-import hr.nipeta.kqzero.entities.enemies.Enemy;
-import hr.nipeta.kqzero.entities.enemies.Scarecrow;
-import hr.nipeta.kqzero.entities.neutral.Bird;
-import hr.nipeta.kqzero.entities.neutral.Fish;
-import hr.nipeta.kqzero.entities.neutral.Neutral;
-import hr.nipeta.kqzero.items.*;
+import hr.nipeta.kqzero.gameobjects.entities.Player;
+import hr.nipeta.kqzero.gameobjects.entities.enemies.BlobLight;
+import hr.nipeta.kqzero.gameobjects.entities.enemies.Enemy;
+import hr.nipeta.kqzero.gameobjects.entities.enemies.Scarecrow;
+import hr.nipeta.kqzero.gameobjects.entities.neutral.Bird;
+import hr.nipeta.kqzero.gameobjects.entities.neutral.Fish;
+import hr.nipeta.kqzero.gameobjects.entities.neutral.Neutral;
+import hr.nipeta.kqzero.gameobjects.items.*;
 import hr.nipeta.kqzero.world.World;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -20,7 +20,6 @@ import javafx.scene.layout.Pane;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -53,6 +52,8 @@ public class GameManager {
     public HelpOverlayDrawer helpOverlayDrawer;
     public MessageDrawer messageDrawer;
 
+    private GameState gameState;
+
     public Scene createScene() {
 
         Canvas canvas = new Canvas(COLS_PER_SCREEN * TILE_SIZE, ROWS_PER_SCREEN * TILE_SIZE);
@@ -69,9 +70,9 @@ public class GameManager {
         player = new Player(this, 21, 21);
 
         itemsOnMap = new ArrayList<>();
-        itemsOnMap.add(new Door(this, 16d,2d));
-        itemsOnMap.add(new Door(this, 3d,6d));
-        itemsOnMap.add(new Door(this, 4d,9d));
+        itemsOnMap.add(new Door(this, 16d, 2d));
+        itemsOnMap.add(new Door(this, 3d, 6d));
+        itemsOnMap.add(new Door(this, 4d, 9d));
 
         Random random = new Random();
         for (int i = 0; i < 700; i++) {
@@ -84,35 +85,26 @@ public class GameManager {
             itemsOnMap.add(key);
         }
 
-        List<Tree> trees = Arrays.asList(
-                new Tree(this, 2.3, 3.2),
-                new Tree(this, 2.5, 3.3),
-                new Tree(this, 2.3, 3.1),
-                new Tree(this, 2.4, 3.2),
-                new Tree(this, 2.7, 3.44)
-
-        );
-        itemsOnMap.addAll(trees);
-
-        for (double i = 0; i < 30; i = i + (0.4 + (double) new Random().nextInt(5) / 10)) {
-            for (double j = 0; j < 30; j = j + (0.4 + (double) new Random().nextInt(5) / 10)) {
-                Tree tree = new Tree(this, 25 + i - 0.5 + new Random().nextDouble(), 15 + j - 0.5 + new Random().nextDouble());
+        for (int i = 0; i < 78; i++) {
+            int worldX = random.nextInt(world.COLS_TOTAL);
+            int worldY = random.nextInt(world.ROWS_TOTAL);
+            Tree tree = new Tree(this, worldX + new Random().nextDouble(.3), worldY + new Random().nextDouble(.3));
+            if (tree.isSpawnableOn(world.tiles[worldY][worldX])) {
                 itemsOnMap.add(tree);
+            } else {
+                i--;
             }
-
         }
 
-        for (double i = 0; i < 10; i = i + (0.6 + (double) new Random().nextInt(5) / 10)) {
-            for (double j = 0; j < 10; j = j + (0.6 + (double) new Random().nextInt(5) / 10)) {
-                Pine tree = new Pine(this, 2 + i - 0.5 + new Random().nextDouble(), 20 + j - 0.5 + new Random().nextDouble());
+        for (int i = 0; i < 55; i++) {
+            int worldX = random.nextInt(world.COLS_TOTAL);
+            int worldY = random.nextInt(world.ROWS_TOTAL);
+            Pine tree = new Pine(this, worldX + new Random().nextDouble(.3), worldY + new Random().nextDouble(.3));
+            if (tree.isSpawnableOn(world.tiles[worldY][worldX])) {
                 itemsOnMap.add(tree);
+            } else {
+                i--;
             }
-
-        }
-
-        for (int i = 0; i < 300; i++) {
-            Tree tree = new Tree(this, (double)random.nextInt(world.COLS_TOTAL), (double)random.nextInt(world.ROWS_TOTAL));
-            itemsOnMap.add(tree);
         }
 
         enemies = new ArrayList<>();
@@ -180,7 +172,7 @@ public class GameManager {
         draw();
 
         if (DebugConfig.logTimeToUpdateAndDraw) {
-            log.debug("Total   = {} microseconds", (System.nanoTime() - nano) / 1e3);
+            log.debug("Total   = {} ms", (System.nanoTime() - nano) / 1e6);
         }
 
     }
@@ -194,7 +186,7 @@ public class GameManager {
         neutrals.forEach(e -> e.update(deltaTimeInSeconds));
 
         if (DebugConfig.logTimeToUpdateAndDraw) {
-            log.debug("Update  = {} microseconds", (System.nanoTime() - nano) / 1e3);
+            log.debug("Update  = {} ms", (System.nanoTime() - nano) / 1e6);
         }
 
     }
@@ -214,7 +206,7 @@ public class GameManager {
         messageDrawer.draw();
 
         if (DebugConfig.logTimeToUpdateAndDraw) {
-            log.debug("Drawing = {} microseconds", (System.nanoTime() - nano) / 1e3);
+            log.debug("Drawing = {} ms", (System.nanoTime() - nano) / 1e6);
         }
 
     }

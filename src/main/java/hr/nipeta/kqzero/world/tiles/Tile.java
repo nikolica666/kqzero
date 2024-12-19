@@ -13,18 +13,19 @@ import static java.util.stream.Collectors.toSet;
 @AllArgsConstructor
 public enum Tile {
 
-    GRASS_1("g1", false, false),
-    GRASS_2("g2", false, false),
-    SEA_1("s1", false, true),
-    SEA_2("s2", false, true),
-    TREE_1("t1", true, false),
-    TREE_2("t2", true, false),
-    ROAD_1("r1", false, false),
-    ROAD_2("r2", false, false);
+    GRASS_1("g1", false, false, false),
+    GRASS_2("g2", false, false, false),
+    SEA_1("s1", false, true, false),
+    SEA_2("s2", false, true, false),
+    TREE_1("t1", true, false, true),
+    TREE_2("t2", true, false, true),
+    ROAD_1("r1", false, false, false),
+    ROAD_2("r2", false, false, false);
 
     private final String fileNotation;
     private final boolean solid;
     private final boolean water;
+    private final boolean forest;
 
     public static Tile fromFileNotation(String fileNotation) {
         for (Tile tile : values()) {

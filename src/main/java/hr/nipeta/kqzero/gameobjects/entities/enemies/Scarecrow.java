@@ -1,7 +1,9 @@
-package hr.nipeta.kqzero.entities.enemies;
+package hr.nipeta.kqzero.gameobjects.entities.enemies;
 
 import hr.nipeta.kqzero.GameManager;
 import hr.nipeta.kqzero.collision.CollisionTolerance;
+import hr.nipeta.kqzero.gameobjects.Direction;
+import hr.nipeta.kqzero.movement.Movement;
 import hr.nipeta.kqzero.world.tiles.Tile;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,19 +15,19 @@ public class Scarecrow extends Enemy {
     private double sameDirectionTotalTileDistanceTraveled;
 
     public Scarecrow(GameManager gm, double worldTileX, double worldTileY) {
-        super(gm, worldTileX, worldTileY, 0.5d, new CollisionTolerance(0.3d), Tile.waterOrSolid());
+        super(gm, worldTileX, worldTileY, new CollisionTolerance(0.3d), Tile.waterOrSolid(), Movement.simple(0.5d));
     }
 
     @Override
     public void update(double deltaTimeInSeconds) {
 
-        double tileDistanceTraveled = this.speedTilesPerSecond * deltaTimeInSeconds;
+        double tileDistanceTraveled = movement.getSpeed().getCurrent() * deltaTimeInSeconds;
 
-        boolean hasCollided = gm.collisionManager.check(gm.world, this, tileDistanceTraveled);
+        boolean hasCollidedWithTile = gm.collisionManager.check(gm.world, this, tileDistanceTraveled);
 
-        if (!hasCollided) {
+        if (!hasCollidedWithTile) {
 
-            switch (direction) {
+            switch (movement.getDirection()) {
                 case UP -> this.worldTileY -= tileDistanceTraveled;
                 case DOWN -> this.worldTileY += tileDistanceTraveled;
                 case LEFT -> this.worldTileX -= tileDistanceTraveled;
@@ -38,17 +40,17 @@ public class Scarecrow extends Enemy {
             sameDirectionTotalTileDistanceTraveled += tileDistanceTraveled;
 
             if (sameDirectionTotalTileDistanceTraveled > 5) {
-                direction = Direction.values()[new Random().nextInt(Direction.values().length)];
+                movement.setDirection(Direction.values()[new Random().nextInt(Direction.values().length)]);
                 sameDirectionTotalTileDistanceTraveled = 0;
             }
 
         } else {
 
-            switch (direction) {
-                case UP -> this.direction = Direction.RIGHT;
-                case DOWN -> this.direction = Direction.LEFT;
-                case LEFT -> this.direction = Direction.UP;
-                case RIGHT -> this.direction = Direction.DOWN;
+            switch (movement.getDirection()) {
+                case Direction.UP -> movement.setDirection(Direction.RIGHT);
+                case Direction.DOWN -> movement.setDirection(Direction.LEFT);
+                case Direction.LEFT -> movement.setDirection(Direction.UP);
+                case Direction.RIGHT -> movement.setDirection(Direction.DOWN);
                 default -> throw new UnsupportedOperationException();
             }
 
@@ -56,4 +58,8 @@ public class Scarecrow extends Enemy {
 
     }
 
+    @Override
+    public String getName() {
+        return "Scarecrow";
+    }
 }

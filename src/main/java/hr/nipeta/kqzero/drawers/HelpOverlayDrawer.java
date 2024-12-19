@@ -4,7 +4,18 @@ import hr.nipeta.kqzero.GameManager;
 import hr.nipeta.kqzero.Main;
 import javafx.scene.paint.Color;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class HelpOverlayDrawer extends OverlayDrawer {
+
+    private static final List<String> HELP_LINES = Arrays.asList(
+            "F1 = help",
+            "F3 = geek statistics",
+            "W = move up",
+            "S = move down",
+            "A = move left",
+            "D = move right");
 
     public HelpOverlayDrawer(GameManager gm) {
         super(gm);
@@ -13,26 +24,24 @@ public class HelpOverlayDrawer extends OverlayDrawer {
     @Override
     protected void drawOnEnabled() {
 
-        double textLineHeight = 38;
+        int numberOfLines = HELP_LINES.size();
+        double textLineHeight = 30;
 
         double canvasCenterX = gm.gc.getCanvas().getWidth() / 2;
 
         gm.gc.setFill(Color.color(0, 0, 0, 0.84d));
-        gm.gc.fillRect(canvasCenterX - 10, 5, 400, textLineHeight * 6 + 10);
+        gm.gc.fillRect(canvasCenterX - 10, 5, 400, textLineHeight * numberOfLines + 10);
 
         gm.gc.setStroke(Color.WHEAT);
         gm.gc.setLineWidth(3d);
-        gm.gc.strokeRect(canvasCenterX - 10, 5, 400, textLineHeight * 6 + 10);
+        gm.gc.strokeRect(canvasCenterX - 10, 5, 400, textLineHeight * numberOfLines + 10);
 
         gm.gc.setFont(Main.regularFont);
         gm.gc.setFill(Color.WHEAT);
 
-        gm.gc.fillText("F1 = help", canvasCenterX, textLineHeight * 1);
-        gm.gc.fillText("F3 = geek statistics", canvasCenterX, textLineHeight * 2);
-        gm.gc.fillText("W = move up", canvasCenterX, textLineHeight * 3);
-        gm.gc.fillText("S = move down", canvasCenterX, textLineHeight * 4);
-        gm.gc.fillText("A = move left", canvasCenterX, textLineHeight * 5);
-        gm.gc.fillText("D = move right", canvasCenterX, textLineHeight * 6);
+        for (int i = 0; i < numberOfLines; i++) {
+            gm.gc.fillText(HELP_LINES.get(i), canvasCenterX, textLineHeight * (i + 1) + 4);
+        }
 
     }
 

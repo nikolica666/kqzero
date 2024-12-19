@@ -31,6 +31,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
             case P -> gm.gameLoop.toggleLoopPlay();
             case F1 -> {
                 gm.helpOverlayDrawer.toggleDrawEnabled();
+                // TODO this should be moved somewhere else probably... we're only covering case when game is paused
                 if (!gm.gameLoop.isPlaying()) {
                     // Draw popup only
                     if (gm.helpOverlayDrawer.isDrawEnabled()) {
@@ -45,6 +46,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
             }
             case F3 -> {
                 gm.geekStatsOverlayDrawer.toggleDrawEnabled();
+                // TODO this should be moved somewhere else probably... we're only covering case when game is paused
                 if (!gm.gameLoop.isPlaying()) {
                     // Draw popup only
                     if (gm.geekStatsOverlayDrawer.isDrawEnabled()) {

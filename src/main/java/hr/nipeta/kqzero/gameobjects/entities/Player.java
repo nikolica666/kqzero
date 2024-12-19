@@ -1,11 +1,12 @@
-package hr.nipeta.kqzero.entities;
+package hr.nipeta.kqzero.gameobjects.entities;
 
 import hr.nipeta.kqzero.DebugConfig;
 import hr.nipeta.kqzero.GameManager;
 import hr.nipeta.kqzero.SpriteManager;
 import hr.nipeta.kqzero.collision.CollisionTolerance;
-import hr.nipeta.kqzero.items.Door;
-import hr.nipeta.kqzero.items.Item;
+import hr.nipeta.kqzero.gameobjects.Direction;
+import hr.nipeta.kqzero.gameobjects.items.Item;
+import hr.nipeta.kqzero.movement.Movement;
 import hr.nipeta.kqzero.world.tiles.Tile;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -18,12 +19,11 @@ import java.util.Set;
 @Slf4j
 public final class Player extends Entity {
 
+    private String name = "Nikola";
     private final List<Item> inventory;
 
     public Player(GameManager gm, int worldTileX, int worldTileY) {
-        super(gm, worldTileX, worldTileY,7,
-                new CollisionTolerance(0.35d, 0.15d, 0.3d,0.3d),
-                Tile.waterOrSolid());
+        super(gm, worldTileX, worldTileY, new CollisionTolerance(0.35d, 0.15d, 0.3d,0.3d), Tile.waterOrSolid(), Movement.simple(7));
         this.inventory = new ArrayList<>();
     }
 
@@ -43,15 +43,16 @@ public final class Player extends Entity {
         spriteCounter.incrementCounterIfSpriteChangeNeeded();
 
         KeyCode lastPressedMovementKey = gm.keyHandler.getLastActiveMovementKey();
-        direction = switch (lastPressedMovementKey) {
-            case W -> Direction.UP;
-            case S -> Direction.DOWN;
-            case A -> Direction.LEFT;
-            case D -> Direction.RIGHT;
-            default -> throw new IllegalStateException("Unexpected value: " + lastPressedMovementKey);
-        };
+        movement.setDirection(
+                switch (lastPressedMovementKey) {
+                case W -> Direction.UP;
+                case S -> Direction.DOWN;
+                case A -> Direction.LEFT;
+                case D -> Direction.RIGHT;
+                default -> throw new IllegalStateException("Unexpected value: " + lastPressedMovementKey);
+        });
 
-        double tileDistanceTraveled = speedTilesPerSecond * deltaTimeInSeconds;
+        double tileDistanceTraveled = movement.getSpeed().getCurrent() * deltaTimeInSeconds;
 
         boolean hasCollidedWithTile = gm.collisionManager.check(gm.world, this, tileDistanceTraveled);
         if (hasCollidedWithTile) {
@@ -76,7 +77,7 @@ public final class Player extends Entity {
         }
 
         if (!hasCollidedWithSolidItem) {
-            switch (direction) {
+            switch (movement.getDirection()) {
                 case UP -> worldTileY -= tileDistanceTraveled;
                 case DOWN -> worldTileY += tileDistanceTraveled;
                 case LEFT -> worldTileX -= tileDistanceTraveled;
@@ -90,7 +91,7 @@ public final class Player extends Entity {
     public void draw() {
 
         // TODO possible optimization? We have to call spriteManager only when sprite will change, not every time...
-        SpriteManager.SpriteSheetResult playerSpriteSheet = gm.spriteManager.calculatePlayerSpriteSheet(this.direction, this.spriteCounter.getCount());
+        SpriteManager.SpriteSheetResult playerSpriteSheet = gm.spriteManager.calculatePlayerSpriteSheet(this.movement.getDirection(), this.spriteCounter.getCount());
 
         gm.gc.drawImage(
                 playerSpriteSheet.getSpriteSheet(),
@@ -122,4 +123,8 @@ public final class Player extends Entity {
 
     }
 
+    @Override
+    public String getName() {
+        return "Player " + name;
+    }
 }

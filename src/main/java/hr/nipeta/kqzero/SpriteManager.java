@@ -1,12 +1,13 @@
 package hr.nipeta.kqzero;
 
-import hr.nipeta.kqzero.entities.Entity;
-import hr.nipeta.kqzero.entities.NonPlayer;
-import hr.nipeta.kqzero.entities.enemies.BlobLight;
-import hr.nipeta.kqzero.entities.enemies.Scarecrow;
-import hr.nipeta.kqzero.entities.neutral.Bird;
-import hr.nipeta.kqzero.entities.neutral.Fish;
-import hr.nipeta.kqzero.items.*;
+import hr.nipeta.kqzero.gameobjects.Direction;
+import hr.nipeta.kqzero.gameobjects.entities.Entity;
+import hr.nipeta.kqzero.gameobjects.entities.NonPlayer;
+import hr.nipeta.kqzero.gameobjects.entities.enemies.BlobLight;
+import hr.nipeta.kqzero.gameobjects.entities.enemies.Scarecrow;
+import hr.nipeta.kqzero.gameobjects.entities.neutral.Bird;
+import hr.nipeta.kqzero.gameobjects.entities.neutral.Fish;
+import hr.nipeta.kqzero.gameobjects.items.*;
 import hr.nipeta.kqzero.world.tiles.Tile;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -17,6 +18,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Objects;
 
+import static hr.nipeta.kqzero.gameobjects.Direction.*;
 import static hr.nipeta.kqzero.world.tiles.Tile.*;
 
 public class SpriteManager {
@@ -90,7 +92,7 @@ public class SpriteManager {
 
         // Spritesheet is 4 rows (UP,DOWN,LEFT,RIGHT), each has 4 cols of images
 
-        int spriteSheetRow = switch (nonPlayer.direction) {
+        int spriteSheetRow = switch (nonPlayer.getMovement().getDirection()) {
             case UP -> 0;
             case DOWN -> 1;
             case LEFT -> 2;
@@ -109,7 +111,7 @@ public class SpriteManager {
 
     }
 
-    public SpriteSheetResult calculatePlayerSpriteSheet(Entity.Direction direction, int spriteCount) {
+    public SpriteSheetResult calculatePlayerSpriteSheet(Direction direction, int spriteCount) {
 
         // Player spritesheet is 4 rows (UP,DOWN,LEFT,RIGHT), each has 4 cols of images
 

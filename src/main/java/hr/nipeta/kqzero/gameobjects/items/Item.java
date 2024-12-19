@@ -1,18 +1,17 @@
-package hr.nipeta.kqzero.entities;
+package hr.nipeta.kqzero.gameobjects.items;
 
 import hr.nipeta.kqzero.DebugConfig;
 import hr.nipeta.kqzero.GameManager;
-import hr.nipeta.kqzero.SpriteManager;
 import hr.nipeta.kqzero.collision.CollisionTolerance;
+import hr.nipeta.kqzero.gameobjects.GameObject;
+import hr.nipeta.kqzero.gameobjects.entities.Entity;
 import hr.nipeta.kqzero.world.tiles.Tile;
 import javafx.scene.paint.Color;
 
-import java.util.Set;
+public abstract class Item extends GameObject {
 
-public abstract class NonPlayer extends Entity {
-
-    protected NonPlayer(GameManager gm, double worldTileX, double worldTileY, double speedTilesPerSecond, CollisionTolerance collisionTolerance, Set<Tile> collidesWith) {
-        super(gm, worldTileX, worldTileY, speedTilesPerSecond, collisionTolerance, collidesWith);
+    public Item(GameManager gm, Double worldTileX, Double worldTileY) {
+        super(gm, worldTileX, worldTileY, new CollisionTolerance(0.1d));
     }
 
     @Override
@@ -28,19 +27,11 @@ public abstract class NonPlayer extends Entity {
             return;
         }
 
-        // TODO possible optimization? We have to call spriteManager only when sprite will change, not every time...
-        SpriteManager.SpriteSheetResult spriteSheetInfo = gm.spriteManager.calculateNonPlayerEntitySpriteSheet(this);
-
         gm.gc.drawImage(
-                spriteSheetInfo.getSpriteSheet(),
-                spriteSheetInfo.getSource().getMinX(),
-                spriteSheetInfo.getSource().getMinY(),
-                spriteSheetInfo.getSource().getWidth(),
-                spriteSheetInfo.getSource().getHeight(),
+                gm.spriteManager.getItem(this),
                 gm.CENTRAL_TILE_TOP_LEFT_X - relativeToPlayerX * gm.TILE_SIZE,
-                gm.CENTRAL_TILE_TOP_LEFT_Y - relativeToPlayerY * gm.TILE_SIZE,
-                gm.TILE_SIZE,
-                gm.TILE_SIZE);
+                gm.CENTRAL_TILE_TOP_LEFT_Y - relativeToPlayerY * gm.TILE_SIZE);
+
 
         if (DebugConfig.drawEntityCollisionBorder) {
             drawCollisionBorder(relativeToPlayerX, relativeToPlayerY);
@@ -60,5 +51,10 @@ public abstract class NonPlayer extends Entity {
         gm.gc.strokeRect(topLeftX, topLeftY, width, height);
 
     }
+
+    public abstract boolean isSpawnableOn(Tile tile);
+
+    public abstract boolean isCollectable(Entity entity);
+    public abstract boolean isSolid();
 
 }

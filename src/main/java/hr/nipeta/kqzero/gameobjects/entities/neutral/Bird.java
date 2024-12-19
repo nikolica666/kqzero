@@ -1,7 +1,9 @@
-package hr.nipeta.kqzero.entities.neutral;
+package hr.nipeta.kqzero.gameobjects.entities.neutral;
 
 import hr.nipeta.kqzero.GameManager;
 import hr.nipeta.kqzero.collision.CollisionTolerance;
+import hr.nipeta.kqzero.gameobjects.Direction;
+import hr.nipeta.kqzero.movement.Movement;
 
 import java.util.Collections;
 import java.util.Random;
@@ -9,7 +11,7 @@ import java.util.Random;
 public class Bird extends Neutral {
 
     public Bird(GameManager gm, double worldTileX, double worldTileY) {
-        super(gm, worldTileX, worldTileY, new Random().nextInt(3,8), new CollisionTolerance(.4), Collections.emptySet());
+        super(gm, worldTileX, worldTileY, new CollisionTolerance(.4), Collections.emptySet(), Movement.simple(new Random().nextInt(3,8)));
     }
 
     @Override
@@ -21,13 +23,13 @@ public class Bird extends Neutral {
         // Set sprite index if needed, so draw() will switch
         spriteCounter.incrementCounterIfSpriteChangeNeeded();
 
-        double tileDistanceTraveled = this.speedTilesPerSecond * deltaTimeInSeconds;
+        double tileDistanceTraveled = movement.getSpeed().getCurrent() * deltaTimeInSeconds;
 
-        boolean hasCollided = gm.collisionManager.check(gm.world, this, tileDistanceTraveled);
+        boolean hasCollidedWithTile = gm.collisionManager.check(gm.world, this, tileDistanceTraveled);
 
-        if (!hasCollided) {
+        if (!hasCollidedWithTile) {
 
-            switch (direction) {
+            switch (movement.getDirection()) {
                 case UP -> this.worldTileY -= tileDistanceTraveled;
                 case DOWN -> this.worldTileY += tileDistanceTraveled;
                 case LEFT -> this.worldTileX -= tileDistanceTraveled;
@@ -40,17 +42,17 @@ public class Bird extends Neutral {
             sameDirectionTotalTileDistanceTraveled += tileDistanceTraveled;
 
             if (sameDirectionTotalTileDistanceTraveled > 7) {
-                direction = Direction.values()[new Random().nextInt(Direction.values().length)];
+                movement.setDirection(Direction.values()[new Random().nextInt(Direction.values().length)]);
                 sameDirectionTotalTileDistanceTraveled = 0;
             }
 
         } else {
 
-            switch (direction) {
-                case UP -> this.direction = Direction.RIGHT;
-                case DOWN -> this.direction = Direction.LEFT;
-                case LEFT -> this.direction = Direction.UP;
-                case RIGHT -> this.direction = Direction.DOWN;
+            switch (movement.getDirection()) {
+                case UP -> movement.setDirection(Direction.RIGHT);
+                case DOWN -> movement.setDirection(Direction.LEFT);
+                case LEFT -> movement.setDirection(Direction.UP);
+                case RIGHT -> movement.setDirection(Direction.DOWN);
                 default -> throw new UnsupportedOperationException();
             }
 
@@ -58,4 +60,8 @@ public class Bird extends Neutral {
 
     }
 
+    @Override
+    public String getName() {
+        return "Bird";
+    }
 }

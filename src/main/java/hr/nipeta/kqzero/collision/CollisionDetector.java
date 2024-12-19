@@ -1,6 +1,6 @@
 package hr.nipeta.kqzero.collision;
 
-import hr.nipeta.kqzero.entities.Entity;
+import hr.nipeta.kqzero.gameobjects.entities.Entity;
 import hr.nipeta.kqzero.world.World;
 import hr.nipeta.kqzero.world.tiles.Tile;
 import lombok.AccessLevel;

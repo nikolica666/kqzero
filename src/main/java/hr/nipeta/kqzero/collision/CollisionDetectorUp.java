@@ -1,6 +1,6 @@
 package hr.nipeta.kqzero.collision;
 
-import hr.nipeta.kqzero.entities.Entity;
+import hr.nipeta.kqzero.gameobjects.entities.Entity;
 import hr.nipeta.kqzero.world.World;
 import lombok.extern.slf4j.Slf4j;
 
