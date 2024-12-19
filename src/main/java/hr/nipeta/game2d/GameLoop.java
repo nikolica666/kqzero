@@ -44,13 +44,9 @@ public class GameLoop extends AnimationTimer {
 
         fpsCounter.addFrame(secondsSinceLastUpdate);
 
-        if (DebugConfig.logTimeToDrawAndFps) {
-            log.debug("Updated in {} microseconds, FPS={}", (System.nanoTime() - now) / 1e3, fpsCounter.currentFps);
-        }
-
     }
 
-    public void toggle() {
+    public void toggleLoopPlay() {
         if (playing) {
             stop();
         } else {
@@ -81,7 +77,7 @@ public class GameLoop extends AnimationTimer {
         playing = false;
     }
 
-    private static class FpsCounter {
+    public static class FpsCounter {
 
         // How often are FPS calculated (don't have to be "per second", it can be more frequent)
         private final int frameCountPeriodPerSecond;

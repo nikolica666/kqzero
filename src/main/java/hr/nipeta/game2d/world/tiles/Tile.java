@@ -19,7 +19,9 @@ public enum Tile {
     SEA_1("s1", false, true),
     SEA_2("s2", false, true),
     TREE_1("t1", true, false),
-    TREE_2("t2", true, false);
+    TREE_2("t2", true, false),
+    ROAD_1("r1", false, false),
+    ROAD_2("r2", false, false);
 
     private final String fileNotation;
     private final boolean solid;

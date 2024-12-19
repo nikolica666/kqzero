@@ -21,7 +21,7 @@ public final class Player extends Entity {
 
     public Player(GameManager gm, int worldTileX, int worldTileY) {
         super(gm, worldTileX, worldTileY,7,
-                new CollisionTolerance(0.35d, 0.1d, 0.3d,0.3d),
+                new CollisionTolerance(0.35d, 0.15d, 0.3d,0.3d),
                 Tile.waterOrSolid());
         this.inventory = new ArrayList<>();
     }
@@ -34,7 +34,7 @@ public final class Player extends Entity {
         boolean hasChangedDirection = false;
 
         // Track when was last sprite updated
-        spriteCounter.lastChangeInSeconds += deltaTimeInSeconds;
+        spriteCounter.addToLastChangeInSeconds(deltaTimeInSeconds);
 
         if (hasTriedToMove) {
 
@@ -42,14 +42,14 @@ public final class Player extends Entity {
             // Set sprite index if needed, so draw() will switch
             spriteCounter.incrementCounterIfSpriteChangeNeeded();
 
-            KeyCode lastPressedKey = gm.keyHandler.getLastActiveMovementKey();
+            KeyCode lastPressedMovementKey = gm.keyHandler.getLastActiveMovementKey();
 
-            this.direction = switch (lastPressedKey) {
+            this.direction = switch (lastPressedMovementKey) {
                 case W -> Entity.Direction.UP;
                 case S -> Entity.Direction.DOWN;
                 case A -> Entity.Direction.LEFT;
                 case D -> Entity.Direction.RIGHT;
-                default -> throw new IllegalStateException("Unexpected value: " + lastPressedKey);
+                default -> throw new IllegalStateException("Unexpected value: " + lastPressedMovementKey);
             };
 
             double tileDistanceTraveled = this.speedTilesPerSecond * deltaTimeInSeconds;
@@ -69,15 +69,12 @@ public final class Player extends Entity {
                 // We're covering case where more items can be on same position
                 Set<Item> collidedItems = gm.collisionManager.check(gm.itemsOnMap, this);
                 if (!collidedItems.isEmpty()) {
-                    log.debug("Player collided with {} item(s)", collidedItems.size());
-
                     for (Item collidedItem : collidedItems) {
                         if (collidedItem.isCollectable(this)) {
                             gm.itemsOnMap.remove(collidedItem);
                             this.inventory.add(collidedItem);
                             log.debug("My inventory has {} items, and map has {}!", this.inventory.size(), gm.itemsOnMap.size());
                         }
-
                     }
                 }
 
@@ -94,7 +91,7 @@ public final class Player extends Entity {
     public void draw() {
 
         // TODO possible optimization? We have to call spriteManager only when sprite will change, not every time...
-        SpriteManager.SpriteSheetResult playerSpriteSheet = gm.spriteManager.calculatePlayerSpriteSheet(this.direction, this.spriteCounter.counter);
+        SpriteManager.SpriteSheetResult playerSpriteSheet = gm.spriteManager.calculatePlayerSpriteSheet(this.direction, this.spriteCounter.getCount());
 
         gm.gc.drawImage(
                 playerSpriteSheet.getSpriteSheet(),

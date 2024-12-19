@@ -25,7 +25,7 @@ public class World {
         this.ROWS_TOTAL = result.getNumberOfRows();
         this.COLS_TOTAL = result.getNumberOfCols();
 
-        tiles = result.getTiles();
+        this.tiles = result.getTiles();
 
     }
 
@@ -36,7 +36,7 @@ public class World {
         this.ROWS_TOTAL = ROWS_TOTAL;
         this.COLS_TOTAL = COLS_TOTAL;
 
-        tiles = new Tile[ROWS_TOTAL][COLS_TOTAL];
+        this.tiles = new Tile[ROWS_TOTAL][COLS_TOTAL];
 
     }
 

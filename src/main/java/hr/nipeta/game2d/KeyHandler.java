@@ -28,7 +28,34 @@ public class KeyHandler implements EventHandler<KeyEvent> {
     private void handleKeyPress(KeyEvent event) {
         switch (event.getCode()) {
             case W,A,S,D -> activeMovementKeys.add(event.getCode());
-            case P -> gm.gameLoop.toggle();
+            case P -> gm.gameLoop.toggleLoopPlay();
+            case F1 -> {
+                gm.helpOverlayDrawer.toggleDrawEnabled();
+                if (!gm.gameLoop.isPlaying()) {
+                    // Draw popup only
+                    if (gm.helpOverlayDrawer.isDrawEnabled()) {
+                        gm.helpOverlayDrawer.draw();
+                    }
+                    // Redraw everything to remove popup (to cover game loop stopped scenario)
+                    else {
+                        gm.draw(); // TODO with secondary canvas we can optimize (no need to redraw all then)
+                    }
+                }
+
+            }
+            case F3 -> {
+                gm.geekStatsOverlayDrawer.toggleDrawEnabled();
+                if (!gm.gameLoop.isPlaying()) {
+                    // Draw popup only
+                    if (gm.geekStatsOverlayDrawer.isDrawEnabled()) {
+                        gm.geekStatsOverlayDrawer.draw();
+                    }
+                    // Redraw everything to remove popup (to cover game loop stopped scenario)
+                    else {
+                        gm.draw(); // TODO with secondary canvas we can optimize (no need to redraw all then)
+                    }
+                }
+            }
         }
     }
 

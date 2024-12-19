@@ -1,8 +1,7 @@
 package hr.nipeta.game2d.entities.enemies;
 
-import hr.nipeta.game2d.collision.CollisionTolerance;
 import hr.nipeta.game2d.GameManager;
-import hr.nipeta.game2d.SpriteManager;
+import hr.nipeta.game2d.collision.CollisionTolerance;
 import hr.nipeta.game2d.world.tiles.Tile;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +13,7 @@ public class Scarecrow extends Enemy {
     private double sameDirectionTotalTileDistanceTraveled;
 
     public Scarecrow(GameManager gm, double worldTileX, double worldTileY) {
-        super(gm, worldTileX, worldTileY, 0.5d, new CollisionTolerance(0.4d), Tile.waterOrSolid());
+        super(gm, worldTileX, worldTileY, 0.5d, new CollisionTolerance(0.3d), Tile.waterOrSolid());
     }
 
     @Override
@@ -57,24 +56,4 @@ public class Scarecrow extends Enemy {
 
     }
 
-    @Override
-    public void draw() {
-
-        double relativeToPlayerX = gm.player.worldTileX - this.worldTileX;
-        double relativeToPlayerY = gm.player.worldTileY - this.worldTileY;
-
-        if (Math.abs(relativeToPlayerX) > (double) gm.world.COLS_TOTAL / 2) {
-            return;
-        }
-
-        if (Math.abs(relativeToPlayerY) > (double) gm.world.ROWS_TOTAL / 2) {
-            return;
-        }
-
-        gm.gc.drawImage(
-                gm.spriteManager.getEnemy(SpriteManager.Enemies.SCARECROW),
-                gm.CENTRAL_TILE_TOP_LEFT_X - relativeToPlayerX * gm.TILE_SIZE,
-                gm.CENTRAL_TILE_TOP_LEFT_Y - relativeToPlayerY * gm.TILE_SIZE);
-
-    }
 }

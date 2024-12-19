@@ -29,6 +29,7 @@ public class CollisionManager {
             RIGHT, new CollisionDetectorRight()
     );
 
+
     public boolean check(World world, Entity entity, double tileDistanceTraveled) {
         return COLLISION_DETECTORS
                 .get(entity.direction)
@@ -44,16 +45,16 @@ public class CollisionManager {
 
     private boolean check(Item itemOnMap, Player player) {
 
-        Rectangle2D i = new Rectangle2D(itemOnMap.worldTileX, itemOnMap.worldTileY, 1,1);
+        Rectangle2D itemRectangle = new Rectangle2D(itemOnMap.worldTileX, itemOnMap.worldTileY, 1,1);
 
-        // Needs optimization
-        Rectangle2D p = new Rectangle2D(
+        // Needs optimization (we call new Rectangle2D for each object)
+        Rectangle2D playerRectangle = new Rectangle2D(
                 player.worldTileX + player.collisionTolerance.left,
                 player.worldTileY + player.collisionTolerance.top,
                 (1 - player.collisionTolerance.left - player.collisionTolerance.right),
                 (1 - player.collisionTolerance.top - player.collisionTolerance.bot));
 
-        return i.intersects(p);
+        return itemRectangle.intersects(playerRectangle);
 
     }
 

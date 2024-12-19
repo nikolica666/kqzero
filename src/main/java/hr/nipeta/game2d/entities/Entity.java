@@ -17,7 +17,7 @@ public abstract class Entity {
     public boolean moving;
     public double totalTileDistanceTraveled;
     public double sameDirectionTotalTileDistanceTraveled;
-    public Set<Tile> collidesWith;
+    private Set<Tile> collidesWith;
     public SpriteCounter spriteCounter;
 
     protected Entity(GameManager gm, double worldTileX, double worldTileY, double speedTilesPerSecond, CollisionTolerance collisionTolerance, Set<Tile> collidesWith) {
@@ -32,6 +32,10 @@ public abstract class Entity {
 
     public abstract void update(double deltaTimeInSeconds);
     public abstract void draw();
+
+    public boolean collidesWith(Tile tile) {
+        return collidesWith.contains(tile);
+    }
 
     public enum Direction {
         UP, DOWN, LEFT, RIGHT

@@ -8,17 +8,17 @@ import lombok.extern.slf4j.Slf4j;
 public class CollisionDetectorLeft extends CollisionDetectorLeftRight {
 
     @Override
-    protected int calculateCurrentTileX(Entity entity) {
+    protected int calculateCurrentTileIndexAlongMovementAxis(Entity entity) {
         return (int)Math.floor(entity.worldTileX + entity.collisionTolerance.left);
     }
 
     @Override
-    protected int calculateNextTileX(Entity entity, double tileDistanceTraveled) {
+    protected int calculateNextTileIndexAlongMovementAxis(Entity entity, double tileDistanceTraveled) {
         return (int)Math.floor(entity.worldTileX + entity.collisionTolerance.left - tileDistanceTraveled);
     }
 
     @Override
-    protected boolean outOfMapX(World world, int tileX) {
-        return tileX < 0;
+    protected boolean indexOutOfMap(World world, int nextMovementAxis) {
+        return nextMovementAxis < 0;
     }
 }

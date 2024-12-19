@@ -16,7 +16,7 @@ public class Bird extends Neutral {
     public void update(double deltaTimeInSeconds) {
 
         // Track when was last sprite updated
-        spriteCounter.lastChangeInSeconds += deltaTimeInSeconds;
+        spriteCounter.addToLastChangeInSeconds(deltaTimeInSeconds);
 
         // Set sprite index if needed, so draw() will switch
         spriteCounter.incrementCounterIfSpriteChangeNeeded();

@@ -1,6 +1,8 @@
 package hr.nipeta.game2d;
 
 import hr.nipeta.game2d.collision.CollisionManager;
+import hr.nipeta.game2d.drawers.GeekStatsOverlayDrawer;
+import hr.nipeta.game2d.drawers.HelpOverlayDrawer;
 import hr.nipeta.game2d.entities.*;
 import hr.nipeta.game2d.entities.enemies.BlobLight;
 import hr.nipeta.game2d.entities.enemies.Enemy;
@@ -13,7 +15,6 @@ import hr.nipeta.game2d.items.Door;
 import hr.nipeta.game2d.items.Item;
 import hr.nipeta.game2d.items.Key;
 import hr.nipeta.game2d.world.World;
-import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -28,8 +29,8 @@ import java.util.Random;
 public class GameManager {
 
     public final int TILE_SIZE = 48;
-    public final int COLS_PER_SCREEN = 30;
-    public final int ROWS_PER_SCREEN = 20;
+    public final int COLS_PER_SCREEN = 39;
+    public final int ROWS_PER_SCREEN = 25;
 
     public final int CENTRAL_TILE_TOP_LEFT_X = (int)(COLS_PER_SCREEN / 2) * TILE_SIZE;
     public final int CENTRAL_TILE_TOP_LEFT_Y = (int)(ROWS_PER_SCREEN / 2) * TILE_SIZE;
@@ -49,6 +50,9 @@ public class GameManager {
     public final GameLoop gameLoop = GameLoop.withHandler(this::updateAndDraw);
     public KeyHandler keyHandler;
 
+    public GeekStatsOverlayDrawer geekStatsOverlayDrawer;
+    public HelpOverlayDrawer helpOverlayDrawer;
+
     public Scene createScene() {
 
         Canvas canvas = new Canvas(COLS_PER_SCREEN * TILE_SIZE, ROWS_PER_SCREEN * TILE_SIZE);
@@ -57,7 +61,7 @@ public class GameManager {
         keyHandler = new KeyHandler(this);
 
         world = new World(this, "/maps/map1.map");
-        player = new Player(this, 1, 1);
+        player = new Player(this, 31, 31);
 
         collisionManager = new CollisionManager(this);
         spriteManager = new SpriteManager(this);
@@ -66,32 +70,32 @@ public class GameManager {
         itemsOnMap.add(new Door(this, 16d,2d));
 
         Random random = new Random();
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 700; i++) {
             Coin coin = new Coin(this, (double)random.nextInt(world.COLS_TOTAL), (double)random.nextInt(world.ROWS_TOTAL));
             itemsOnMap.add(coin);
         }
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 300; i++) {
             Key key = new Key(this, (double)random.nextInt(world.COLS_TOTAL), (double)random.nextInt(world.ROWS_TOTAL));
             itemsOnMap.add(key);
         }
 
         enemies = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 14; i++) {
             int worldX = random.nextInt(world.COLS_TOTAL);
             int worldY = random.nextInt(world.ROWS_TOTAL);
             BlobLight blob = new BlobLight(this, (double)worldX, (double)worldY);
-            if (blob.collidesWith.contains(world.tiles[worldY][worldX])) {
+            if (blob.collidesWith(world.tiles[worldY][worldX])) {
                 i--;
                 continue;
             }
             enemies.add(blob);
         }
-        for (int i = 0; i < 120; i++) {
+        for (int i = 0; i < 12; i++) {
             int worldX = random.nextInt(world.COLS_TOTAL);
             int worldY = random.nextInt(world.ROWS_TOTAL);
             Scarecrow sc = new Scarecrow(this, (double)worldX, (double)worldY);
-            if (sc.collidesWith.contains(world.tiles[worldY][worldX])) {
+            if (sc.collidesWith(world.tiles[worldY][worldX])) {
                 i--;
                 continue;
             }
@@ -99,27 +103,30 @@ public class GameManager {
         }
 
         neutrals = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 15; i++) {
             int worldX = random.nextInt(world.COLS_TOTAL);
             int worldY = random.nextInt(world.ROWS_TOTAL);
             Fish f = new Fish(this, (double)worldX, (double)worldY);
-            if (f.collidesWith.contains(world.tiles[worldY][worldX])) {
+            if (f.collidesWith(world.tiles[worldY][worldX])) {
                 i--;
                 continue;
             }
             neutrals.add(f);
         }
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 11; i++) {
             int worldX = random.nextInt(world.COLS_TOTAL);
             int worldY = random.nextInt(world.ROWS_TOTAL);
             Bird b = new Bird(this, (double)worldX, (double)worldY);
-            if (b.collidesWith.contains(world.tiles[worldY][worldX])) {
+            if (b.collidesWith(world.tiles[worldY][worldX])) {
                 i--;
                 continue;
             }
             neutrals.add(b);
         }
+
+        geekStatsOverlayDrawer = new GeekStatsOverlayDrawer(this);
+        helpOverlayDrawer = new HelpOverlayDrawer(this);
 
         updateAndDraw(0);
 
@@ -133,23 +140,36 @@ public class GameManager {
 
     }
 
-    private void updateAndDraw(double deltaTimeInSeconds) {
+    public void updateAndDraw(double deltaTimeInSeconds) {
+
+        long nano = System.nanoTime();
+
         update(deltaTimeInSeconds);
         draw();
+
+        if (DebugConfig.logTimeToUpdateAndDraw) {
+            log.debug("Draw + Update = {} microseconds", (System.nanoTime() - nano) / 1e3);
+        }
+
     }
 
-    private void update(double deltaTimeInSeconds) {
+    public void update(double deltaTimeInSeconds) {
         player.update(deltaTimeInSeconds);
         enemies.forEach(e -> e.update(deltaTimeInSeconds));
         neutrals.forEach(e -> e.update(deltaTimeInSeconds));
     }
 
-    private void draw() {
+    public void draw() {
+
         world.drawCenteredAt(player.worldTileX, player.worldTileY);
         itemsOnMap.forEach(Item::draw);
         player.draw();
         enemies.forEach(Enemy::draw);
         neutrals.forEach(Neutral::draw);
+
+        geekStatsOverlayDrawer.draw();
+        helpOverlayDrawer.draw();
+
     }
 
 }

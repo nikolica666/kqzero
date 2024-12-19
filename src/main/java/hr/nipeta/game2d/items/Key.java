@@ -1,7 +1,6 @@
 package hr.nipeta.game2d.items;
 
 import hr.nipeta.game2d.GameManager;
-import hr.nipeta.game2d.SpriteManager;
 import hr.nipeta.game2d.entities.Entity;
 import hr.nipeta.game2d.entities.Player;
 
@@ -12,29 +11,6 @@ public class Key extends Item {
     }
 
     @Override
-    public void draw() {
-
-        double relativeToPlayerX = gm.player.worldTileX - this.worldTileX;
-        double relativeToPlayerY = gm.player.worldTileY - this.worldTileY;
-
-        if (Math.abs(relativeToPlayerX) > (double) gm.world.COLS_TOTAL / 2) {
-            return;
-        }
-
-        if (Math.abs(relativeToPlayerY) > (double) gm.world.ROWS_TOTAL / 2) {
-            return;
-        }
-
-        gm.gc.drawImage(
-                gm.spriteManager.getItem(SpriteManager.Items.KEY),
-                gm.CENTRAL_TILE_TOP_LEFT_X - relativeToPlayerX * gm.TILE_SIZE,
-                gm.CENTRAL_TILE_TOP_LEFT_Y - relativeToPlayerY * gm.TILE_SIZE);
-
-    }
-
-    @Override
-    public boolean isCollectable(Entity entity) {
-        return entity instanceof Player;
-    }
+    public boolean isCollectable(Entity entity) { return entity instanceof Player; }
 
 }
