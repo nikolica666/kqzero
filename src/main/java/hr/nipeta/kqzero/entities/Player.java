@@ -59,14 +59,13 @@ public final class Player extends Entity {
                 // We're covering case where more items can be on same position
                 Set<Item> collidedItems = gm.collisionManager.check(gm.itemsOnMap, this, tileDistanceTraveled);
                 for (Item collidedItem : collidedItems) {
+                    // On purpose, we let player pick up item even if there's another solid item on same tile
                     if (collidedItem.isCollectable(this)) {
                         gm.itemsOnMap.remove(collidedItem);
                         inventory.add(collidedItem);
-                        log.debug("My inventory has {} items, and map has {}!", inventory.size(), gm.itemsOnMap.size());
                     }
                     if (collidedItem.isSolid()) {
                         hasCollidedWithSolidItem = true;
-                        log.debug("hasCollidedWithSolidItem!");
                     }
                 }
 
