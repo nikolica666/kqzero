@@ -33,4 +33,6 @@ public abstract class Item {
     }
 
     public abstract boolean isCollectable(Entity entity);
+    public abstract boolean isSolid();
+
 }

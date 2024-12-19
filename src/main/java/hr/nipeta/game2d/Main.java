@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
-import java.util.Objects;
 
 @Slf4j
 @Getter
@@ -29,13 +28,6 @@ public class Main extends Application {
     public static Font regularFont;
     public static Font semiBoldFont;
     public static Font boldFont;
-
-//    private static void loadFonts(double size) {
-//        lightFont = loadFont("/fonts/lemon-milk/LEMONMILK-Light.otf", size);
-//        regularFont = loadFont("/fonts/lemon-milk/LEMONMILK-Regular.otf", size);
-//        semiBoldFont = loadFont("/fonts/lemon-milk/LEMONMILK-Medium.otf", size);
-//        boldFont = loadFont("/fonts/lemon-milk/LEMONMILK-Bold.otf", size);
-//    }
 
     private static void loadFonts(double size) {
         lightFont = loadFont("/fonts/perfect-dos/perfect-dos-vga-437-Regular.ttf", size);

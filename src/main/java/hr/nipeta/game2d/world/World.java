@@ -11,10 +11,10 @@ public class World {
 
     private final GameManager gm;
 
-    public int ROWS_TOTAL;
-    public int COLS_TOTAL;
+    public final int ROWS_TOTAL;
+    public final int COLS_TOTAL;
 
-    public Tile[][] tiles;
+    public final Tile[][] tiles;
 
     public World(GameManager gameManager, String mapLocalResource) {
 

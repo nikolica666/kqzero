@@ -11,6 +11,48 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class CollisionDetector {
 
     /**
+     * <ol>
+     *     <li>Find out current and next tile indices along <b>movement</b> axis (LR = X-axis, UD = Y-axis)</li>
+     *     <li>If indices are same, we're still on same tile, so there's no collision (return <b>false</b>)</li>
+     *     <li>If next tile index along movement axis is out of map that's collision(return <b>true</b>)</li>
+     *     <li>Find out indices along <b>collision</b> axis (for LR that's Y-axis, for UD that's X-axis). There
+     *     can only be one or two tiles in which entity will hit</li>
+     *     <li>Get those tiles (or single tile) from world</li>
+     *     <li>Check if entity collides with them</li>
+     * </ol>
+     *
+     */
+    public boolean check(World world, Entity entity, double tileDistanceTraveled) {
+
+        int currentTileIndexAlongMovementAxis = calculateCurrentTileIndexAlongMovementAxis(entity);
+        int nextTileIndexAlongMovementAxis = calculateNextTileIndexAlongMovementAxis(entity, tileDistanceTraveled);
+
+        if (nextTileIndexAlongMovementAxis == currentTileIndexAlongMovementAxis) {
+            // We'll still be on the same tile, so there's no collision
+            return false;
+        }
+
+        if (indexOutOfMap(world, nextTileIndexAlongMovementAxis)) {
+            // We'll be outside of map, so there is collision
+            return true;
+        }
+
+        TileIndices collisionAxisTileIndices = collisionAxisTileIndices(entity);
+
+        // Mini optimization if there is just 1 tile to check
+        if (collisionAxisTileIndices.isSameIndex()) {
+            Tile tile = collisionTile(world, collisionAxisTileIndices.index1, nextTileIndexAlongMovementAxis);
+            return entity.collidesWith(tile);
+        } else {
+            Tile tile1 = collisionTile(world, collisionAxisTileIndices.index1, nextTileIndexAlongMovementAxis);
+            Tile tile2 = collisionTile(world, collisionAxisTileIndices.index2, nextTileIndexAlongMovementAxis);
+            return entity.collidesWith(tile1) || entity.collidesWith(tile2);
+
+        }
+
+    }
+
+    /**
      * We need to know on which tile index entity currently is (along the movement axis)
      */
     protected abstract int calculateCurrentTileIndexAlongMovementAxis(Entity entity);
@@ -54,47 +96,6 @@ public abstract class CollisionDetector {
      * <p>For L-R we are 'hitting' Y axis so collision axis is Y => {@code world.tiles[collisionAxisTileIndex][movementAxisNextTileIndex]}</p>
      */
     protected abstract Tile collisionTile(World world, int collisionAxisTileIndex, int movementAxisNextTileIndex);
-
-    /**
-     * <ol>
-     *     <li>Find out current and next tile indices along <b>movement</b> axis (LR = X-axis, UD = Y-axis)</li>
-     *     <li>If indices are same, we're still on same tile, so <b>return false</b></li>
-     *     <li>If next tile index along movement axis is out of map <b>return true</b></li>
-     *     <li>Find out indices along <b>collision</b> axis (for LR that's Y-axis, for UD that's X-axis). There
-     *     can only be one or two tiles in which entity will hit</li>
-     *     <li>Get those tiles (or single tile) from world</li>
-     *     <li>Check if entity collides with them</li>
-     * </ol>
-     *
-     */
-    public boolean check(World world, Entity entity, double tileDistanceTraveled) {
-
-        int currentTileIndexAlongMovementAxis = calculateCurrentTileIndexAlongMovementAxis(entity);
-        int nextTileIndexAlongMovementAxis = calculateNextTileIndexAlongMovementAxis(entity, tileDistanceTraveled);
-
-        if (nextTileIndexAlongMovementAxis == currentTileIndexAlongMovementAxis) {
-            // We'll still be on the same tile, so there's no collision
-            return false;
-        }
-
-        if (indexOutOfMap(world, nextTileIndexAlongMovementAxis)) {
-            // We'll be outside of map, so there is collision
-            return true;
-        }
-
-        TileIndices collisionAxisTileIndices = collisionAxisTileIndices(entity);
-
-        if (collisionAxisTileIndices.isSameIndex()) {
-            Tile tile = collisionTile(world, collisionAxisTileIndices.index1, nextTileIndexAlongMovementAxis);
-            return entity.collidesWith(tile);
-        } else {
-            Tile tile1 = collisionTile(world, collisionAxisTileIndices.index1, nextTileIndexAlongMovementAxis);
-            Tile tile2 = collisionTile(world, collisionAxisTileIndices.index2, nextTileIndexAlongMovementAxis);
-            return entity.collidesWith(tile1) || entity.collidesWith(tile2);
-
-        }
-
-    }
 
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     protected static class TileIndices {

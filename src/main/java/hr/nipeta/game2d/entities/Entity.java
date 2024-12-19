@@ -9,16 +9,16 @@ import java.util.Set;
 
 public abstract class Entity {
 
-    protected GameManager gm;
-    public double worldTileX, worldTileY;
-    public double speedTilesPerSecond;
-    public CollisionTolerance collisionTolerance;
+    protected final GameManager gm;
+    public double worldTileX;
+    public double worldTileY;
+    public final double speedTilesPerSecond;
+    public final CollisionTolerance collisionTolerance;
     public Direction direction = Direction.DOWN;
-    public boolean moving;
     public double totalTileDistanceTraveled;
     public double sameDirectionTotalTileDistanceTraveled;
-    private Set<Tile> collidesWith;
-    public SpriteCounter spriteCounter;
+    private final Set<Tile> collidesWith;
+    public final SpriteCounter spriteCounter;
 
     protected Entity(GameManager gm, double worldTileX, double worldTileY, double speedTilesPerSecond, CollisionTolerance collisionTolerance, Set<Tile> collidesWith) {
         this.gm = gm;

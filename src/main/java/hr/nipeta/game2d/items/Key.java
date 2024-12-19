@@ -10,7 +10,7 @@ public class Key extends Item {
         super(gm, worldTileX, worldTileY);
     }
 
-    @Override
-    public boolean isCollectable(Entity entity) { return entity instanceof Player; }
+    @Override public boolean isCollectable(Entity entity) { return entity instanceof Player; }
+    @Override public boolean isSolid() { return false; }
 
 }

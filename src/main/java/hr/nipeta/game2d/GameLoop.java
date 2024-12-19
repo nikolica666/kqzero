@@ -89,7 +89,7 @@ public class GameLoop extends AnimationTimer {
         // How many frames were counted since last FPS is set
         private int frameCounter;
 
-        // Could be useful flag in future, so we know if we need to redraw FPS on screen
+        // Could be useful flag in the future, so we know if we need to redraw FPS on screen
         @Getter
         private boolean frameCountIntervalReached;
 

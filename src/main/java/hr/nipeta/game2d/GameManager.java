@@ -40,7 +40,7 @@ public class GameManager {
     public World world;
     public Player player;
 
-    public CollisionManager collisionManager;
+    public final CollisionManager collisionManager = new CollisionManager();
     public SpriteManager spriteManager;
 
     public List<Item> itemsOnMap;
@@ -61,13 +61,14 @@ public class GameManager {
         keyHandler = new KeyHandler(this);
 
         world = new World(this, "/maps/map1.map");
-        player = new Player(this, 31, 31);
+        player = new Player(this, 21, 21);
 
-        collisionManager = new CollisionManager(this);
         spriteManager = new SpriteManager(this);
 
         itemsOnMap = new ArrayList<>();
         itemsOnMap.add(new Door(this, 16d,2d));
+        itemsOnMap.add(new Door(this, 3d,6d));
+        itemsOnMap.add(new Door(this, 4d,9d));
 
         Random random = new Random();
         for (int i = 0; i < 700; i++) {
@@ -84,7 +85,7 @@ public class GameManager {
         for (int i = 0; i < 14; i++) {
             int worldX = random.nextInt(world.COLS_TOTAL);
             int worldY = random.nextInt(world.ROWS_TOTAL);
-            BlobLight blob = new BlobLight(this, (double)worldX, (double)worldY);
+            BlobLight blob = new BlobLight(this, worldX, worldY);
             if (blob.collidesWith(world.tiles[worldY][worldX])) {
                 i--;
                 continue;
@@ -94,7 +95,7 @@ public class GameManager {
         for (int i = 0; i < 12; i++) {
             int worldX = random.nextInt(world.COLS_TOTAL);
             int worldY = random.nextInt(world.ROWS_TOTAL);
-            Scarecrow sc = new Scarecrow(this, (double)worldX, (double)worldY);
+            Scarecrow sc = new Scarecrow(this, worldX, worldY);
             if (sc.collidesWith(world.tiles[worldY][worldX])) {
                 i--;
                 continue;
@@ -106,7 +107,7 @@ public class GameManager {
         for (int i = 0; i < 15; i++) {
             int worldX = random.nextInt(world.COLS_TOTAL);
             int worldY = random.nextInt(world.ROWS_TOTAL);
-            Fish f = new Fish(this, (double)worldX, (double)worldY);
+            Fish f = new Fish(this, worldX, worldY);
             if (f.collidesWith(world.tiles[worldY][worldX])) {
                 i--;
                 continue;
@@ -117,7 +118,7 @@ public class GameManager {
         for (int i = 0; i < 11; i++) {
             int worldX = random.nextInt(world.COLS_TOTAL);
             int worldY = random.nextInt(world.ROWS_TOTAL);
-            Bird b = new Bird(this, (double)worldX, (double)worldY);
+            Bird b = new Bird(this, worldX, worldY);
             if (b.collidesWith(world.tiles[worldY][worldX])) {
                 i--;
                 continue;
