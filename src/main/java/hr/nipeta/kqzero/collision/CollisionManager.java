@@ -7,7 +7,7 @@ import javafx.geometry.Rectangle2D;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,24 +31,16 @@ public class CollisionManager {
                 .check(world, entity, tileDistanceTraveled);
     }
 
-    public Set<Item> check(List<Item> itemsOnMap, Entity entity, double tileDistanceTraveled) {
+    public Set<Item> check(Collection<Item> itemsOnMap, Entity entity, double tileDistanceTraveled) {
 
-        final double futureEntityRectangleTopLeftDeltaX = switch (entity.direction) {
-            case UP, DOWN -> 0;
-            case LEFT -> -tileDistanceTraveled;
-            case RIGHT -> tileDistanceTraveled;
-        };
-        final double futureEntityRectangleTopLeftDeltaY = switch (entity.direction) {
-            case UP -> -tileDistanceTraveled;
-            case DOWN -> tileDistanceTraveled;
-            case LEFT, RIGHT -> 0;
-        };
+        final double futureEntityRectangleTopLeftDeltaX = distanceTraveledX(entity.direction, tileDistanceTraveled);
+        final double futureEntityRectangleTopLeftDeltaY = distanceTraveledY(entity.direction, tileDistanceTraveled);
 
         Rectangle2D futureEntityRectangle = new Rectangle2D(
                 entity.worldTileX + entity.collisionTolerance.left + futureEntityRectangleTopLeftDeltaX,
                 entity.worldTileY + entity.collisionTolerance.top + futureEntityRectangleTopLeftDeltaY,
-                1 - entity.collisionTolerance.left - entity.collisionTolerance.right,
-                1 - entity.collisionTolerance.top - entity.collisionTolerance.bot);
+                entity.collisionTolerance.width,
+                entity.collisionTolerance.height);
 
         return itemsOnMap
                 .stream()
@@ -57,8 +49,28 @@ public class CollisionManager {
 
     }
 
+    private double distanceTraveledX(Entity.Direction direction, double distanceTraveled) {
+        return switch (direction) {
+            case UP, DOWN -> 0;
+            case LEFT -> -distanceTraveled;
+            case RIGHT -> distanceTraveled;
+        };
+    }
+
+    private double distanceTraveledY(Entity.Direction direction, double distanceTraveled) {
+        return switch (direction) {
+            case UP -> -distanceTraveled;
+            case DOWN -> distanceTraveled;
+            case LEFT, RIGHT -> 0;
+        };
+    }
+
     private boolean check(Item itemOnMap, Rectangle2D futureEntityRectangle) {
-        Rectangle2D itemRectangle = new Rectangle2D(itemOnMap.worldTileX, itemOnMap.worldTileY, 1,1);
+        Rectangle2D itemRectangle = new Rectangle2D(
+                itemOnMap.worldTileX + itemOnMap.collisionTolerance.left,
+                itemOnMap.worldTileY + itemOnMap.collisionTolerance.top,
+                itemOnMap.collisionTolerance.width,
+                itemOnMap.collisionTolerance.height);
         return futureEntityRectangle.intersects(itemRectangle);
     }
 

@@ -9,7 +9,7 @@ import java.util.Random;
 public class Bird extends Neutral {
 
     public Bird(GameManager gm, double worldTileX, double worldTileY) {
-        super(gm, worldTileX, worldTileY, new Random().nextInt(8,12), new CollisionTolerance(.4), Collections.emptySet());
+        super(gm, worldTileX, worldTileY, new Random().nextInt(3,8), new CollisionTolerance(.4), Collections.emptySet());
     }
 
     @Override

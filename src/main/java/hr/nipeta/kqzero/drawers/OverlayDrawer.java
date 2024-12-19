@@ -3,21 +3,18 @@ package hr.nipeta.kqzero.drawers;
 import hr.nipeta.kqzero.GameManager;
 import lombok.Getter;
 
-public abstract class OverlayDrawer {
+@Getter
+public abstract class OverlayDrawer extends Drawer {
 
-    protected final GameManager gm;
-
-    @Getter
     private boolean drawEnabled;
 
-    protected OverlayDrawer(GameManager gm) {
-        this.gm = gm;
-    }
+    protected OverlayDrawer(GameManager gm) { super(gm); }
 
     public final void toggleDrawEnabled() {
         drawEnabled = !drawEnabled;
     }
 
+    @Override
     public final void draw() {
         if (drawEnabled) {
             drawOnEnabled();

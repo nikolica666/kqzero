@@ -9,7 +9,7 @@ import java.util.Random;
 public class Fish extends Neutral {
 
     public Fish(GameManager gm, double worldTileX, double worldTileY) {
-        super(gm, worldTileX, worldTileY, 3, new CollisionTolerance(.1), Tile.nonWater());
+        super(gm, worldTileX, worldTileY, 2.5, new CollisionTolerance(.1), Tile.nonWater());
     }
 
     @Override

@@ -24,19 +24,23 @@ public abstract class CollisionDetector {
      */
     public boolean check(World world, Entity entity, double tileDistanceTraveled) {
 
-        int currentTileIndexAlongMovementAxis = calculateCurrentTileIndexAlongMovementAxis(entity);
+        // e.g. for moving left on tile (x=2,y=3), this may be 2 (if it's still on same tile), or 1 if on new
         int nextTileIndexAlongMovementAxis = calculateNextTileIndexAlongMovementAxis(entity, tileDistanceTraveled);
+
+        if (indexOutOfMap(world, nextTileIndexAlongMovementAxis)) {
+            // outside of map =  collision (e.g. for moving left it means X-coord after travel would be < 0)
+            return true;
+        }
+
+        // e.g. for moving left  on tile (x=2,y=3), this is 2
+        int currentTileIndexAlongMovementAxis = calculateCurrentTileIndexAlongMovementAxis(entity);
 
         if (nextTileIndexAlongMovementAxis == currentTileIndexAlongMovementAxis) {
             // We'll still be on the same tile, so there's no collision
             return false;
         }
 
-        if (indexOutOfMap(world, nextTileIndexAlongMovementAxis)) {
-            // We'll be outside of map, so there is collision
-            return true;
-        }
-
+        // e.g. for move left on tile (x=2,y=3), these indices may be y=2 and y=1, or y=2 and y=2, or y=2 and y=3
         TileIndices collisionAxisTileIndices = collisionAxisTileIndices(entity);
 
         // Mini optimization if there is just 1 tile to check

@@ -13,4 +13,9 @@ public class Key extends Item {
     @Override public boolean isCollectable(Entity entity) { return entity instanceof Player; }
     @Override public boolean isSolid() { return false; }
 
+    @Override
+    public String getName() {
+        return "Key";
+    }
+
 }

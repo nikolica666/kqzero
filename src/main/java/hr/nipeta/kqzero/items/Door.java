@@ -10,4 +10,9 @@ public class Door extends Item {
     @Override public boolean isCollectable(Entity entity) { return false; }
     @Override public boolean isSolid() { return true; }
 
+    @Override
+    public String getName() {
+        return "Door";
+    }
+
 }

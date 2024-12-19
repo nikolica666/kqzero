@@ -1,16 +1,12 @@
 package hr.nipeta.kqzero;
 
 import hr.nipeta.kqzero.entities.Entity;
+import hr.nipeta.kqzero.entities.NonPlayer;
 import hr.nipeta.kqzero.entities.enemies.BlobLight;
-import hr.nipeta.kqzero.entities.enemies.Enemy;
 import hr.nipeta.kqzero.entities.enemies.Scarecrow;
 import hr.nipeta.kqzero.entities.neutral.Bird;
 import hr.nipeta.kqzero.entities.neutral.Fish;
-import hr.nipeta.kqzero.entities.neutral.Neutral;
-import hr.nipeta.kqzero.items.Coin;
-import hr.nipeta.kqzero.items.Door;
-import hr.nipeta.kqzero.items.Item;
-import hr.nipeta.kqzero.items.Key;
+import hr.nipeta.kqzero.items.*;
 import hr.nipeta.kqzero.world.tiles.Tile;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -27,8 +23,7 @@ public class SpriteManager {
 
     private final GameManager gm;
 
-    private final Map<Class<? extends Enemy>, Image> ENEMY_SPRITES;
-    private final Map<Class<? extends Neutral>, Image> NEUTRAL_SPRITES;
+    private final Map<Class<? extends NonPlayer>, Image> NON_PLAYER_SPRITES;
     private final Map<Class<? extends Item>, Image> ITEM_SPRITES;
     private final Map<Tile, Image> TILE_SPRITES;
     private final Image PLAYER_SPRITESHEET;
@@ -50,12 +45,9 @@ public class SpriteManager {
 
         this.PLAYER_SPRITESHEET = resizedSpriteSheetFromResource("/sprites/player/spritesheet.png", 4, 4);
 
-        this.ENEMY_SPRITES = Map.of(
+        this.NON_PLAYER_SPRITES = Map.of(
                 BlobLight.class, resizedSpriteSheetFromResource("/sprites/enemies/blob-spritesheet-4x4.png", 4, 4),
-                Scarecrow.class, resizedSpriteSheetFromResource("/sprites/enemies/scarecrow-spritesheet-4x4.png", 4, 4)
-        );
-
-        this.NEUTRAL_SPRITES = Map.of(
+                Scarecrow.class, resizedSpriteSheetFromResource("/sprites/enemies/scarecrow-spritesheet-4x4.png", 4, 4),
                 Fish.class, resizedSpriteSheetFromResource("/sprites/neutrals/fish-spritesheet-4x4.png", 4, 4),
                 Bird.class, resizedSpriteSheetFromResource("/sprites/neutrals/bird-spritesheet-4x4.png", 4,4)
         );
@@ -63,7 +55,9 @@ public class SpriteManager {
         this.ITEM_SPRITES = Map.of(
                 Coin.class, resizedSpriteFromResource("/sprites/items/coin3.png"),
                 Key.class, resizedSpriteFromResource("/sprites/items/key2.png"),
-                Door.class, resizedSpriteFromResource("/sprites/items/door.png")
+                Door.class, resizedSpriteFromResource("/sprites/items/door.png"),
+                Tree.class, resizedSpriteFromResource("/sprites/items/tree-item-1.png"),
+                Pine.class, resizedSpriteFromResource("/sprites/items/pine-item-1.png")
         );
 
     }
@@ -92,47 +86,26 @@ public class SpriteManager {
         }
     }
 
-    public Image getTile(Tile tile) {
-        return Objects.requireNonNull(TILE_SPRITES.get(tile));
-    }
+    public SpriteSheetResult calculateNonPlayerEntitySpriteSheet(NonPlayer nonPlayer) {
 
-    public SpriteSheetResult calculateEnemySpriteSheet(Enemy enemy) {
+        // Spritesheet is 4 rows (UP,DOWN,LEFT,RIGHT), each has 4 cols of images
 
-        // Player spritesheet is 4 rows (UP,DOWN,LEFT,RIGHT), each has 4 cols of images
-
-        int spriteSheetRow = switch (enemy.direction) {
+        int spriteSheetRow = switch (nonPlayer.direction) {
             case UP -> 0;
             case DOWN -> 1;
             case LEFT -> 2;
             case RIGHT -> 3;
         };
 
-        int spriteSheetCol = enemy.spriteCounter.getCount() % 4;
+        int spriteSheetCol = nonPlayer.spriteCounter.getCount() % 4;
 
-        // Display the first sprite (top-left corner)
-        Rectangle2D source = new Rectangle2D(spriteSheetCol * gm.TILE_SIZE, spriteSheetRow * gm.TILE_SIZE, gm.TILE_SIZE, gm.TILE_SIZE);
+        Rectangle2D source = new Rectangle2D(
+                spriteSheetCol * gm.TILE_SIZE,
+                spriteSheetRow * gm.TILE_SIZE,
+                gm.TILE_SIZE,
+                gm.TILE_SIZE);
 
-        return new SpriteSheetResult(this.ENEMY_SPRITES.get(enemy.getClass()), spriteSheetRow, spriteSheetCol, source);
-
-    }
-
-    public SpriteSheetResult calculateNeutralSpriteSheet(Neutral neutral) {
-
-        // Player spritesheet is 4 rows (UP,DOWN,LEFT,RIGHT), each has 4 cols of images
-
-        int spriteSheetRow = switch (neutral.direction) {
-            case UP -> 0;
-            case DOWN -> 1;
-            case LEFT -> 2;
-            case RIGHT -> 3;
-        };
-
-        int spriteSheetCol = neutral.spriteCounter.getCount() % 4;
-
-        // Display the first sprite (top-left corner)
-        Rectangle2D source = new Rectangle2D(spriteSheetCol * gm.TILE_SIZE, spriteSheetRow * gm.TILE_SIZE, gm.TILE_SIZE, gm.TILE_SIZE);
-
-        return new SpriteSheetResult(this.NEUTRAL_SPRITES.get(neutral.getClass()), spriteSheetRow, spriteSheetCol, source);
+        return new SpriteSheetResult(NON_PLAYER_SPRITES.get(nonPlayer.getClass()), spriteSheetRow, spriteSheetCol, source);
 
     }
 
@@ -149,11 +122,22 @@ public class SpriteManager {
 
         int spriteSheetCol = spriteCount % 4;
 
-        // Display the first sprite (top-left corner)
-        Rectangle2D source = new Rectangle2D(spriteSheetCol * gm.TILE_SIZE, spriteSheetRow * gm.TILE_SIZE, gm.TILE_SIZE, gm.TILE_SIZE);
+        Rectangle2D source = new Rectangle2D(
+                spriteSheetCol * gm.TILE_SIZE,
+                spriteSheetRow * gm.TILE_SIZE,
+                gm.TILE_SIZE,
+                gm.TILE_SIZE);
 
-        return new SpriteSheetResult(this.PLAYER_SPRITESHEET, spriteSheetRow, spriteSheetCol, source);
+        return new SpriteSheetResult(PLAYER_SPRITESHEET, spriteSheetRow, spriteSheetCol, source);
 
+    }
+
+    public Image getTile(Tile tile) {
+        return Objects.requireNonNull(TILE_SPRITES.get(tile));
+    }
+
+    public Image getItem(Item item) {
+        return ITEM_SPRITES.get(item.getClass());
     }
 
     @AllArgsConstructor
@@ -163,10 +147,6 @@ public class SpriteManager {
         private int spriteSheetRow;
         private int spriteSheetCol;
         private Rectangle2D source;
-    }
-
-    public Image getItem(Item item) {
-        return ITEM_SPRITES.get(item.getClass());
     }
 
 }
