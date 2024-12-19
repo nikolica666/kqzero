@@ -1,7 +1,6 @@
 package hr.nipeta.kqzero;
 
-import hr.nipeta.kqzero.gameobjects.Direction;
-import hr.nipeta.kqzero.gameobjects.entities.Entity;
+import hr.nipeta.kqzero.gameobjects.entities.Direction;
 import hr.nipeta.kqzero.gameobjects.entities.NonPlayer;
 import hr.nipeta.kqzero.gameobjects.entities.enemies.BlobLight;
 import hr.nipeta.kqzero.gameobjects.entities.enemies.Scarecrow;
@@ -18,7 +17,6 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Objects;
 
-import static hr.nipeta.kqzero.gameobjects.Direction.*;
 import static hr.nipeta.kqzero.world.tiles.Tile.*;
 
 public class SpriteManager {

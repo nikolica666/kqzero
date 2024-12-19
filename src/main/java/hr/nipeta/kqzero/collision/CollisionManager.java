@@ -1,6 +1,6 @@
 package hr.nipeta.kqzero.collision;
 
-import hr.nipeta.kqzero.gameobjects.Direction;
+import hr.nipeta.kqzero.gameobjects.entities.Direction;
 import hr.nipeta.kqzero.gameobjects.entities.Entity;
 import hr.nipeta.kqzero.gameobjects.items.Item;
 import hr.nipeta.kqzero.world.World;
@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import static hr.nipeta.kqzero.gameobjects.Direction.*;
+import static hr.nipeta.kqzero.gameobjects.entities.Direction.*;
 import static java.util.stream.Collectors.toSet;
 
 @Slf4j

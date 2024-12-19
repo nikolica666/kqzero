@@ -1,12 +1,9 @@
 package hr.nipeta.kqzero.movement;
 
-import hr.nipeta.kqzero.gameobjects.Direction;
-import lombok.AllArgsConstructor;
+import hr.nipeta.kqzero.gameobjects.entities.Direction;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Random;
 
 @Getter
 @Setter

@@ -4,7 +4,6 @@ import hr.nipeta.kqzero.DebugConfig;
 import hr.nipeta.kqzero.GameManager;
 import hr.nipeta.kqzero.SpriteManager;
 import hr.nipeta.kqzero.collision.CollisionTolerance;
-import hr.nipeta.kqzero.gameobjects.Direction;
 import hr.nipeta.kqzero.gameobjects.items.Item;
 import hr.nipeta.kqzero.movement.Movement;
 import hr.nipeta.kqzero.world.tiles.Tile;
