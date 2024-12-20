@@ -5,11 +5,9 @@ import hr.nipeta.kqzero.collision.CollisionTolerance;
 import hr.nipeta.kqzero.gameobjects.entities.NonPlayer;
 import hr.nipeta.kqzero.movement.Movement;
 import hr.nipeta.kqzero.world.tiles.Tile;
-import lombok.Getter;
 
 import java.util.Set;
 
-@Getter
 public abstract class Neutral extends NonPlayer {
 
     protected Neutral(GameManager gm, double worldTileX, double worldTileY, CollisionTolerance collisionTolerance, Set<Tile> collidesWith, Movement movement) {

@@ -14,10 +14,9 @@ public abstract class Entity extends GameObject {
 
     @Getter
     protected Movement movement;
-    public double totalTileDistanceTraveled;
-    public double sameDirectionTotalTileDistanceTraveled;
     private final Set<Tile> collidesWith;
-    public final SpriteCounter spriteCounter;
+    @Getter
+    protected final SpriteCounter spriteCounter;
 
     protected Entity(GameManager gm, double worldTileX, double worldTileY, CollisionTolerance collisionTolerance, Set<Tile> collidesWith, Movement movement) {
         super(gm, worldTileX, worldTileY, collisionTolerance);

@@ -22,7 +22,7 @@ public final class Player extends Entity {
     private final List<Item> inventory;
 
     public Player(GameManager gm, int worldTileX, int worldTileY) {
-        super(gm, worldTileX, worldTileY, new CollisionTolerance(0.35d, 0.15d, 0.3d,0.3d), Tile.waterOrSolid(), Movement.simple(7));
+        super(gm, worldTileX, worldTileY, new CollisionTolerance(0.35d, 0.15d, 0.3d,0.3d), Tile.waterOrSolid(), Movement.simple(7, Integer.MAX_VALUE));
         this.inventory = new ArrayList<>();
     }
 
@@ -42,7 +42,7 @@ public final class Player extends Entity {
         spriteCounter.incrementCounterIfSpriteChangeNeeded();
 
         KeyCode lastPressedMovementKey = gm.keyHandler.getLastActiveMovementKey();
-        movement.setDirection(
+        movement.changeDirection(
                 switch (lastPressedMovementKey) {
                 case W -> Direction.UP;
                 case S -> Direction.DOWN;
@@ -82,6 +82,10 @@ public final class Player extends Entity {
                 case LEFT -> worldTileX -= tileDistanceTraveled;
                 case RIGHT -> worldTileX += tileDistanceTraveled;
             }
+
+            // Update (mostly for stats), altough this data is important for NPCs
+            movement.incrementTotalAndCurrentDirectionDistance(tileDistanceTraveled);
+
         }
 
     }

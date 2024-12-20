@@ -16,11 +16,11 @@ public class GeekStatsOverlayDrawer extends OverlayDrawer {
         double textLineHeight = 30;
 
         gm.gc.setFill(Color.color(0, 0, 0, 0.84d));
-        gm.gc.fillRect(5, 5, 500, textLineHeight * 6 + 10);
+        gm.gc.fillRect(5, 5, 500, textLineHeight * 7 + 10);
 
         gm.gc.setStroke(Color.WHEAT);
         gm.gc.setLineWidth(3d);
-        gm.gc.strokeRect(5, 5, 500, textLineHeight * 6 + 10);
+        gm.gc.strokeRect(5, 5, 500, textLineHeight * 7 + 10);
 
         gm.gc.setFont(Main.regularFont);
         gm.gc.setFill(Color.WHEAT);
@@ -35,6 +35,7 @@ public class GeekStatsOverlayDrawer extends OverlayDrawer {
 
         gm.gc.fillText(String.format("Tile = (%s,%s)", tileX, tileY), 16, textLineHeight * 5 + 4);
         gm.gc.fillText(String.format("Tile type = %s", gm.world.tiles[tileY][tileX]), 16, textLineHeight * 6 + 4);
+        gm.gc.fillText(String.format("Tiles traveled = %f", gm.player.getMovement().getTotalDistance()), 16, textLineHeight * 7 + 4);
 
     }
 

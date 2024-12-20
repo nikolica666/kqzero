@@ -97,7 +97,7 @@ public class SpriteManager {
             case RIGHT -> 3;
         };
 
-        int spriteSheetCol = nonPlayer.spriteCounter.getCount() % 4;
+        int spriteSheetCol = nonPlayer.getSpriteCounter().getCount() % 4;
 
         Rectangle2D source = new Rectangle2D(
                 spriteSheetCol * gm.TILE_SIZE,

@@ -8,12 +8,53 @@ import hr.nipeta.kqzero.movement.Movement;
 import hr.nipeta.kqzero.world.tiles.Tile;
 import javafx.scene.paint.Color;
 
+import java.util.DoubleSummaryStatistics;
 import java.util.Set;
 
 public abstract class NonPlayer extends Entity {
 
     protected NonPlayer(GameManager gm, double worldTileX, double worldTileY, CollisionTolerance collisionTolerance, Set<Tile> collidesWith, Movement movement) {
         super(gm, worldTileX, worldTileY, collisionTolerance, collidesWith, movement);
+    }
+
+    @Override
+    public void update(double deltaTimeInSeconds) {
+        updateMovementAndCollision(deltaTimeInSeconds);
+        updateSpriteCount(deltaTimeInSeconds);
+    }
+
+    private void updateMovementAndCollision(double deltaTimeInSeconds) {
+
+        double tileDistanceTraveled = movement.getSpeed().getCurrent() * deltaTimeInSeconds;
+
+        boolean hasCollidedWithTile = gm.collisionManager.check(gm.world, this, tileDistanceTraveled);
+        if (hasCollidedWithTile) {
+            movement.getCollisionStrategy().apply(movement);
+            return;
+        }
+
+        switch (movement.getDirection()) {
+            case UP -> this.worldTileY -= tileDistanceTraveled;
+            case DOWN -> this.worldTileY += tileDistanceTraveled;
+            case LEFT -> this.worldTileX -= tileDistanceTraveled;
+            case RIGHT -> this.worldTileX += tileDistanceTraveled;
+            default -> throw new UnsupportedOperationException();
+        }
+
+        movement.incrementTotalAndCurrentDirectionDistance(tileDistanceTraveled);
+
+        movement.getTraversalStrategy().apply(movement);
+
+    }
+
+    private void updateSpriteCount(double deltaTimeInSeconds) {
+
+        // Track when was last sprite updated
+        spriteCounter.addToLastChangeInSeconds(deltaTimeInSeconds);
+
+        // Set sprite index if needed, so draw() will switch
+        spriteCounter.incrementCounterIfSpriteChangeNeeded();
+
     }
 
     @Override
