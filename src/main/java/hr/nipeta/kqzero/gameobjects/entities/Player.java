@@ -9,6 +9,9 @@ import hr.nipeta.kqzero.movement.Movement;
 import hr.nipeta.kqzero.world.tiles.Tile;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -18,12 +21,17 @@ import java.util.Set;
 @Slf4j
 public final class Player extends Entity {
 
-    private String name = "Nikola";
-    private final List<Item> inventory;
+    private final String name = "Nikola";
+    @Getter private final Inventory inventory;
 
     public Player(GameManager gm, int worldTileX, int worldTileY) {
         super(gm, worldTileX, worldTileY, new CollisionTolerance(0.35d, 0.15d, 0.3d,0.3d), Tile.waterOrSolid(), Movement.simple(7, Integer.MAX_VALUE));
-        this.inventory = new ArrayList<>();
+        this.inventory = Inventory.empty();
+    }
+
+    public void addToInventory(Item collectableItem) {
+        log.debug("Item {} added to inventory", collectableItem);
+        inventory.add(collectableItem);
     }
 
     @Override
@@ -64,12 +72,8 @@ public final class Player extends Entity {
         boolean hasCollidedWithSolidItem = false;
 
         for (Item collidedItem : collidedItems) {
-            // On purpose, we let player pick up item even if there's another solid item on same tile
-            if (collidedItem.isCollectable(this)) {
-                gm.itemsOnMap.remove(collidedItem);
-                inventory.add(collidedItem);
-                gm.messageDrawer.addMessage(String.format("You collected new %s", collidedItem.getName()));
-            }
+            collidedItem.triggerBehavior(Entity.Action.MOVE_OVER, this);
+
             if (collidedItem.isSolid()) {
                 hasCollidedWithSolidItem = true;
             }
@@ -83,7 +87,7 @@ public final class Player extends Entity {
                 case RIGHT -> worldTileX += tileDistanceTraveled;
             }
 
-            // Update (mostly for stats), altough this data is important for NPCs
+            // Update (mostly for stats), although this data is important for NPCs
             movement.incrementTotalAndCurrentDirectionDistance(tileDistanceTraveled);
 
         }
@@ -130,4 +134,21 @@ public final class Player extends Entity {
     public String getName() {
         return "Player " + name;
     }
+
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    private static class Inventory {
+
+        private final List<Item> inventory;
+
+        private static Inventory empty() {
+            return new Inventory(new ArrayList<>());
+        }
+
+        public void add(Item item) {
+            inventory.add(item);
+        }
+
+    }
+
 }

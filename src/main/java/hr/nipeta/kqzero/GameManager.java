@@ -4,6 +4,7 @@ import hr.nipeta.kqzero.collision.CollisionManager;
 import hr.nipeta.kqzero.drawers.GeekStatsOverlayDrawer;
 import hr.nipeta.kqzero.drawers.HelpOverlayDrawer;
 import hr.nipeta.kqzero.drawers.MessageDrawer;
+import hr.nipeta.kqzero.drawers.PauseOverlayDrawer;
 import hr.nipeta.kqzero.gameobjects.entities.Player;
 import hr.nipeta.kqzero.gameobjects.entities.enemies.BlobLight;
 import hr.nipeta.kqzero.gameobjects.entities.enemies.Enemy;
@@ -51,6 +52,7 @@ public class GameManager {
     public GeekStatsOverlayDrawer geekStatsOverlayDrawer;
     public HelpOverlayDrawer helpOverlayDrawer;
     public MessageDrawer messageDrawer;
+    public PauseOverlayDrawer pauseDrawer;
 
     private GameState gameState;
 
@@ -65,6 +67,7 @@ public class GameManager {
         geekStatsOverlayDrawer = new GeekStatsOverlayDrawer(this);
         helpOverlayDrawer = new HelpOverlayDrawer(this);
         messageDrawer = new MessageDrawer(this);
+        pauseDrawer = new PauseOverlayDrawer(this);
 
         world = new World(this, "/maps/map1.map");
         player = new Player(this, 21, 21);
@@ -204,6 +207,7 @@ public class GameManager {
         geekStatsOverlayDrawer.draw();
         helpOverlayDrawer.draw();
         messageDrawer.draw();
+        pauseDrawer.draw();
 
         if (DebugConfig.logTimeToUpdateAndDraw) {
             log.debug("Drawing = {} ms", (System.nanoTime() - nano) / 1e6);

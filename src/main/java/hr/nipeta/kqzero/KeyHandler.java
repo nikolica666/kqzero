@@ -28,7 +28,14 @@ public class KeyHandler implements EventHandler<KeyEvent> {
     private void handleKeyPress(KeyEvent event) {
         switch (event.getCode()) {
             case W,A,S,D -> activeMovementKeys.add(event.getCode());
-            case P -> gm.gameLoop.toggleLoopPlay();
+            // TODO Refactoring needed most likely...
+            case P -> {
+                gm.pauseDrawer.toggleDrawEnabled();
+                gm.gameLoop.toggleLoopPlay();
+                if (!gm.gameLoop.isPlaying()) {
+                    gm.pauseDrawer.draw();
+                }
+            }
             case F1 -> {
                 gm.helpOverlayDrawer.toggleDrawEnabled();
                 // TODO this should be moved somewhere else probably... we're only covering case when game is paused

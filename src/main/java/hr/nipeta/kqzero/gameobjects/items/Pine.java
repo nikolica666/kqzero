@@ -11,9 +11,6 @@ public class Pine extends Item {
     }
 
     @Override public boolean isSpawnableOn(Tile tile) { return tile.isForest(); }
-    @Override public boolean isCollectable(Entity entity) {
-        return false;
-    }
     @Override public boolean isSolid() {
         return true;
     }

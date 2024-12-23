@@ -20,39 +20,39 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        loadFonts(32);
+        Fonts.init();
         launch(args);
     }
 
-    public static Font lightFont;
-    public static Font regularFont;
-    public static Font semiBoldFont;
-    public static Font boldFont;
+    public static class Fonts {
 
-    private static void loadFonts(double size) {
-        lightFont = loadFont("/fonts/perfect-dos/perfect-dos-vga-437-Regular.ttf", size);
-        regularFont = loadFont("/fonts/perfect-dos/perfect-dos-vga-437-Regular.ttf", size);
-        semiBoldFont = loadFont("/fonts/perfect-dos/perfect-dos-vga-437-Regular.ttf", size);
-        boldFont = loadFont("/fonts/perfect-dos/perfect-dos-vga-437-Regular.ttf", size);
-    }
+        public static Font REGULAR_32;
+        public static Font REGULAR_48;
 
-    private static Font loadFont(String resourceLocalPath, double size) {
+        private static void init() {
+            REGULAR_32 = loadFont("/fonts/perfect-dos/perfect-dos-vga-437-Regular.ttf", 32);
+            REGULAR_48 = loadFont("/fonts/perfect-dos/perfect-dos-vga-437-Regular.ttf", 48);
+        }
 
-        try (InputStream resourceStream = Main.class.getResourceAsStream(resourceLocalPath)) {
+        private static Font loadFont(String resourceLocalPath, double size) {
 
-            Font font = Font.loadFont(resourceStream, size);
+            try (InputStream resourceStream = Main.class.getResourceAsStream(resourceLocalPath)) {
 
-            if (font == null) {
-                log.error("Failed to load font '{}', returning null", resourceLocalPath);
-            } else {
-                log.debug("Loaded font '{}' with size {}", resourceLocalPath, size);
+                Font font = Font.loadFont(resourceStream, size);
+
+                if (font == null) {
+                    log.error("Failed to load font '{}', returning null", resourceLocalPath);
+                } else {
+                    log.debug("Loaded font '{}' with size {}", resourceLocalPath, size);
+                }
+
+                return font;
+
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                return null;
             }
 
-            return font;
-
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return null;
         }
 
     }

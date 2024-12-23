@@ -31,4 +31,9 @@ public abstract class Entity extends GameObject {
         return collidesWith.contains(tile);
     }
 
+    public enum Action {
+        MOVE_OVER
+    }
+
 }
+

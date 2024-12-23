@@ -22,7 +22,7 @@ public class GeekStatsOverlayDrawer extends OverlayDrawer {
         gm.gc.setLineWidth(3d);
         gm.gc.strokeRect(5, 5, 500, textLineHeight * 7 + 10);
 
-        gm.gc.setFont(Main.regularFont);
+        gm.gc.setFont(Main.Fonts.REGULAR_32);
         gm.gc.setFill(Color.WHEAT);
 
         gm.gc.fillText(String.format("FPS = %s", gm.gameLoop.getFpsCounter().getCurrentFps()), 16, textLineHeight + 4);

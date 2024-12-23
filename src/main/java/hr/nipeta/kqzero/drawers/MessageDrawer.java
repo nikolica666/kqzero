@@ -33,7 +33,6 @@ public class MessageDrawer extends Drawer {
         if (messages.isEmpty()) {
             return;
         }
-        log.debug("I HAVE {} messages to display", messages.size());
 
         double canvasHeight = gm.gc.getCanvas().getHeight();
         double canvasWidth = gm.gc.getCanvas().getWidth();
@@ -51,7 +50,7 @@ public class MessageDrawer extends Drawer {
         gm.gc.setLineWidth(3d);
         gm.gc.strokeRect(rectStartX, rectStartY, rectWidth, rectHeight);
 
-        gm.gc.setFont(Main.regularFont);
+        gm.gc.setFont(Main.Fonts.REGULAR_32);
         gm.gc.setFill(Color.WHEAT);
 
         int row = -1;
@@ -64,7 +63,7 @@ public class MessageDrawer extends Drawer {
     }
 
     @AllArgsConstructor
-    public static class Message implements Comparable<Message> {
+    private static class Message implements Comparable<Message> {
         private int ordinal; // For covering case when multiple messages are born in the same millisecond
         private String text;
         private long bornMs;

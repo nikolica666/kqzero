@@ -36,7 +36,7 @@ public class HelpOverlayDrawer extends OverlayDrawer {
         gm.gc.setLineWidth(3d);
         gm.gc.strokeRect(canvasCenterX - 10, 5, 400, textLineHeight * numberOfLines + 10);
 
-        gm.gc.setFont(Main.regularFont);
+        gm.gc.setFont(Main.Fonts.REGULAR_32);
         gm.gc.setFill(Color.WHEAT);
 
         for (int i = 0; i < numberOfLines; i++) {

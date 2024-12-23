@@ -5,13 +5,38 @@ import hr.nipeta.kqzero.GameManager;
 import hr.nipeta.kqzero.collision.CollisionTolerance;
 import hr.nipeta.kqzero.gameobjects.GameObject;
 import hr.nipeta.kqzero.gameobjects.entities.Entity;
+import hr.nipeta.kqzero.gameobjects.items.behavior.ItemBehavior;
+import hr.nipeta.kqzero.gameobjects.items.behavior.NoopItemBehavior;
 import hr.nipeta.kqzero.world.tiles.Tile;
 import javafx.scene.paint.Color;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class Item extends GameObject {
 
     public Item(GameManager gm, Double worldTileX, Double worldTileY) {
         super(gm, worldTileX, worldTileY, new CollisionTolerance(0.1d));
+    }
+
+    private final Map<Entity.Action, ItemBehavior> actionToBehavior = new HashMap<>();
+
+    public void addBehavior(Entity.Action entityAction, ItemBehavior behavior) {
+        if (actionToBehavior.containsKey(entityAction)) {
+            throw new IllegalArgumentException(String.format("EntityAction '%s' is already mapped", entityAction));
+        }
+        actionToBehavior.put(entityAction, behavior);
+    }
+
+    public void triggerBehavior(Entity.Action entityAction, Entity entity) {
+        actionToBehavior.getOrDefault(entityAction, new NoopItemBehavior()).applyTo(entity, gm);
+    }
+
+    public void removeBehaviour(Entity.Action entityAction) {
+        ItemBehavior removedBehavior = actionToBehavior.remove(entityAction);
+        if (removedBehavior == null) {
+            throw new IllegalArgumentException(String.format("EntityAction '%s' is not mapped mapped", entityAction));
+        }
     }
 
     @Override
@@ -54,7 +79,6 @@ public abstract class Item extends GameObject {
 
     public abstract boolean isSpawnableOn(Tile tile);
 
-    public abstract boolean isCollectable(Entity entity);
     public abstract boolean isSolid();
 
 }
