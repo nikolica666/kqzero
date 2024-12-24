@@ -11,7 +11,7 @@ import java.util.Random;
 public class Bird extends Neutral {
 
     public Bird(GameManager gm, WorldTile worldTile) {
-        super(gm, worldTile, new CollisionTolerance(.4), Collections.emptySet(), Movement.simple(new Random().nextInt(3,8), 7));
+        super(gm, worldTile, new CollisionTolerance(0.4d), Collections.emptySet(), Movement.simple(new Random().nextInt(3,8), 7));
     }
 
     @Override
