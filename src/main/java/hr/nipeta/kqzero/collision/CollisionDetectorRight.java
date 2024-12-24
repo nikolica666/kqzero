@@ -9,12 +9,12 @@ public class CollisionDetectorRight extends CollisionDetectorLeftRight {
 
     @Override
     protected int calculateCurrentTileIndexAlongMovementAxis(Entity entity) {
-        return (int)Math.ceil(entity.worldTileX - entity.collisionTolerance.right);
+        return (int)Math.ceil(entity.tile.x - entity.collisionTolerance.right);
     }
 
     @Override
     protected int calculateNextTileIndexAlongMovementAxis(Entity entity, double tileDistanceTraveled) {
-        return (int)Math.ceil(entity.worldTileX - entity.collisionTolerance.right + tileDistanceTraveled);
+        return (int)Math.ceil(entity.tile.x - entity.collisionTolerance.right + tileDistanceTraveled);
     }
 
     @Override

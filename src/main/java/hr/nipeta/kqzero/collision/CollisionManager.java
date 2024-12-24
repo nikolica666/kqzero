@@ -40,8 +40,8 @@ public class CollisionManager {
         final double futureEntityRectangleTopLeftDeltaY = distanceTraveledY(direction, tileDistanceTraveled);
 
         Rectangle2D futureEntityRectangle = new Rectangle2D(
-                entity.worldTileX + entity.collisionTolerance.left + futureEntityRectangleTopLeftDeltaX,
-                entity.worldTileY + entity.collisionTolerance.top + futureEntityRectangleTopLeftDeltaY,
+                entity.tile.x + entity.collisionTolerance.left + futureEntityRectangleTopLeftDeltaX,
+                entity.tile.y + entity.collisionTolerance.top + futureEntityRectangleTopLeftDeltaY,
                 entity.collisionTolerance.width,
                 entity.collisionTolerance.height);
 
@@ -70,8 +70,8 @@ public class CollisionManager {
 
     private boolean check(Item itemOnMap, Rectangle2D futureEntityRectangle) {
         Rectangle2D itemRectangle = new Rectangle2D(
-                itemOnMap.worldTileX + itemOnMap.collisionTolerance.left,
-                itemOnMap.worldTileY + itemOnMap.collisionTolerance.top,
+                itemOnMap.tile.x + itemOnMap.collisionTolerance.left,
+                itemOnMap.tile.y + itemOnMap.collisionTolerance.top,
                 itemOnMap.collisionTolerance.width,
                 itemOnMap.collisionTolerance.height);
         return futureEntityRectangle.intersects(itemRectangle);

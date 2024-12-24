@@ -5,16 +5,16 @@ import hr.nipeta.kqzero.GameManager;
 import hr.nipeta.kqzero.SpriteManager;
 import hr.nipeta.kqzero.collision.CollisionTolerance;
 import hr.nipeta.kqzero.movement.Movement;
+import hr.nipeta.kqzero.world.WorldTile;
 import hr.nipeta.kqzero.world.tiles.Tile;
 import javafx.scene.paint.Color;
 
-import java.util.DoubleSummaryStatistics;
 import java.util.Set;
 
 public abstract class NonPlayer extends Entity {
 
-    protected NonPlayer(GameManager gm, double worldTileX, double worldTileY, CollisionTolerance collisionTolerance, Set<Tile> collidesWith, Movement movement) {
-        super(gm, worldTileX, worldTileY, collisionTolerance, collidesWith, movement);
+    protected NonPlayer(GameManager gm, WorldTile worldTile, CollisionTolerance collisionTolerance, Set<Tile> collidesWith, Movement movement) {
+        super(gm, worldTile, collisionTolerance, collidesWith, movement);
     }
 
     @Override
@@ -34,10 +34,10 @@ public abstract class NonPlayer extends Entity {
         }
 
         switch (movement.getDirection()) {
-            case UP -> this.worldTileY -= tileDistanceTraveled;
-            case DOWN -> this.worldTileY += tileDistanceTraveled;
-            case LEFT -> this.worldTileX -= tileDistanceTraveled;
-            case RIGHT -> this.worldTileX += tileDistanceTraveled;
+            case UP -> this.tile.y -= tileDistanceTraveled;
+            case DOWN -> this.tile.y += tileDistanceTraveled;
+            case LEFT -> this.tile.x -= tileDistanceTraveled;
+            case RIGHT -> this.tile.x += tileDistanceTraveled;
             default -> throw new UnsupportedOperationException();
         }
 
@@ -60,12 +60,12 @@ public abstract class NonPlayer extends Entity {
     @Override
     public final void draw() {
 
-        double relativeToPlayerX = gm.player.worldTileX - this.worldTileX;
+        double relativeToPlayerX = gm.player.tile.x - this.tile.x;
         if (Math.abs(relativeToPlayerX) > (double) gm.world.COLS_TOTAL / 2) {
             return;
         }
 
-        double relativeToPlayerY = gm.player.worldTileY - this.worldTileY;
+        double relativeToPlayerY = gm.player.tile.y - this.tile.y;
         if (Math.abs(relativeToPlayerY) > (double) gm.world.ROWS_TOTAL / 2) {
             return;
         }

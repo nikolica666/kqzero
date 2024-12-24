@@ -2,7 +2,6 @@ package hr.nipeta.kqzero.movement.traversal;
 
 import hr.nipeta.kqzero.gameobjects.entities.Direction;
 import hr.nipeta.kqzero.movement.Movement;
-import lombok.AllArgsConstructor;
 
 import java.util.Random;
 
@@ -21,6 +20,11 @@ public class VariableRandomTraversalStrategy implements TraversalStrategy {
 
     private double currentDirectionMaxDistance;
 
+    /**
+     * @param minRandomMaxDistance min distance to travel before (random) turn
+     * @param maxRandomMaxDistance max distance to travel before (random) turn
+     * @see VariableRandomTraversalStrategy
+     */
     public VariableRandomTraversalStrategy(double minRandomMaxDistance, double maxRandomMaxDistance) {
         this.minRandomMaxDistance = minRandomMaxDistance;
         this.maxRandomMaxDistance = maxRandomMaxDistance;

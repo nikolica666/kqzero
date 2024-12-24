@@ -30,8 +30,8 @@ public class GeekStatsOverlayDrawer extends OverlayDrawer {
         gm.gc.fillText(String.format("Enemies on map = %s", gm.enemies.size()), 16, textLineHeight * 3 + 4);
         gm.gc.fillText(String.format("Neutrals on map = %s", gm.neutrals.size()), 16, textLineHeight * 4 + 4);
 
-        int tileX = (int)(gm.player.worldTileX + gm.player.collisionTolerance.left);
-        int tileY = (int)(gm.player.worldTileY + gm.player.collisionTolerance.top);
+        int tileX = (int)(gm.player.tile.x + gm.player.collisionTolerance.left);
+        int tileY = (int)(gm.player.tile.y + gm.player.collisionTolerance.top);
 
         gm.gc.fillText(String.format("Tile = (%s,%s)", tileX, tileY), 16, textLineHeight * 5 + 4);
         gm.gc.fillText(String.format("Tile type = %s", gm.world.tiles[tileY][tileX]), 16, textLineHeight * 6 + 4);

@@ -53,7 +53,7 @@ public class World {
 
     }
 
-    public void drawCenteredAt(double worldTileX, double worldTileY) {
+    public void drawCenteredAt(WorldTile worldTile) {
 
         GraphicsContext gc = gm.gc;
 
@@ -61,11 +61,11 @@ public class World {
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 
-        int worldTileYInt = (int)worldTileY;
-        int worldTileXInt = (int)worldTileX;
+        int worldTileYInt = (int)worldTile.y;
+        int worldTileXInt = (int)worldTile.x;
 
-        double partOfTileY = worldTileY - worldTileYInt;
-        double partOfTileX = worldTileX - worldTileXInt;
+        double partOfTileY = worldTile.y - worldTileYInt;
+        double partOfTileX = worldTile.x - worldTileXInt;
 
         int offSetY = worldTileYInt - gm.ROWS_PER_SCREEN / 2;
         int offSetX = worldTileXInt - gm.COLS_PER_SCREEN / 2;

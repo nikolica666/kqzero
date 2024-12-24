@@ -2,12 +2,12 @@ package hr.nipeta.kqzero.collision;
 
 public class CollisionTolerance {
 
-    public double top;
-    public double bot;
-    public double left;
-    public double right;
-    public double width;
-    public double height;
+    public final double top;
+    public final double bot;
+    public final double left;
+    public final double right;
+    public final double width;
+    public final double height;
 
     public CollisionTolerance(double tolerance) {
         this(tolerance, tolerance, tolerance, tolerance);

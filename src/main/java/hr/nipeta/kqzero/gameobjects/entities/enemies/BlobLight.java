@@ -6,17 +6,17 @@ import hr.nipeta.kqzero.gameobjects.entities.Direction;
 import hr.nipeta.kqzero.movement.Movement;
 import hr.nipeta.kqzero.movement.collision.ClockwiseCollisionStrategy;
 import hr.nipeta.kqzero.movement.traversal.VariableRandomTraversalStrategy;
+import hr.nipeta.kqzero.world.WorldTile;
 import hr.nipeta.kqzero.world.tiles.Tile;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class BlobLight extends Enemy {
 
-    public BlobLight(GameManager gameManager, double worldTileX, double worldTileY) {
+    public BlobLight(GameManager gameManager, WorldTile worldTile) {
         super(
                 gameManager,
-                worldTileX,
-                worldTileY,
+                worldTile,
                 new CollisionTolerance(0.3d),
                 Tile.water(),
                 Movement.builder()

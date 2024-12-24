@@ -6,6 +6,7 @@ import hr.nipeta.kqzero.SpriteManager;
 import hr.nipeta.kqzero.collision.CollisionTolerance;
 import hr.nipeta.kqzero.gameobjects.items.Item;
 import hr.nipeta.kqzero.movement.Movement;
+import hr.nipeta.kqzero.world.WorldTile;
 import hr.nipeta.kqzero.world.tiles.Tile;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -24,14 +25,14 @@ public final class Player extends Entity {
     private final String name = "Nikola";
     @Getter private final Inventory inventory;
 
-    public Player(GameManager gm, int worldTileX, int worldTileY) {
-        super(gm, worldTileX, worldTileY, new CollisionTolerance(0.35d, 0.15d, 0.3d,0.3d), Tile.waterOrSolid(), Movement.simple(7, Integer.MAX_VALUE));
+    public Player(GameManager gm, WorldTile worldTile) {
+        super(gm, worldTile, new CollisionTolerance(0.35d, 0.15d, 0.3d, 0.3d), Tile.waterOrSolid(), Movement.simple(7, Integer.MAX_VALUE));
         this.inventory = Inventory.empty();
     }
 
-    public void addToInventory(Item collectableItem) {
-        log.debug("Item {} added to inventory", collectableItem);
-        inventory.add(collectableItem);
+    public void addToInventory(Item item) {
+        inventory.add(item);
+        log.debug("Item {} added to inventory", item);
     }
 
     @Override
@@ -72,7 +73,7 @@ public final class Player extends Entity {
         boolean hasCollidedWithSolidItem = false;
 
         for (Item collidedItem : collidedItems) {
-            collidedItem.triggerBehavior(Entity.Action.MOVE_OVER, this);
+            collidedItem.triggerBehavior(Entity.Action.MOVE_OVER_ITEM, this);
 
             if (collidedItem.isSolid()) {
                 hasCollidedWithSolidItem = true;
@@ -81,10 +82,10 @@ public final class Player extends Entity {
 
         if (!hasCollidedWithSolidItem) {
             switch (movement.getDirection()) {
-                case UP -> worldTileY -= tileDistanceTraveled;
-                case DOWN -> worldTileY += tileDistanceTraveled;
-                case LEFT -> worldTileX -= tileDistanceTraveled;
-                case RIGHT -> worldTileX += tileDistanceTraveled;
+                case UP -> tile.y -= tileDistanceTraveled;
+                case DOWN -> tile.y += tileDistanceTraveled;
+                case LEFT -> tile.x -= tileDistanceTraveled;
+                case RIGHT -> tile.x += tileDistanceTraveled;
             }
 
             // Update (mostly for stats), although this data is important for NPCs

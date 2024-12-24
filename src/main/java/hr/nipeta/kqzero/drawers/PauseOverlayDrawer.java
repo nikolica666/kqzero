@@ -8,7 +8,8 @@ public class PauseOverlayDrawer extends OverlayDrawer {
 
     private static final String text = "Game is paused, press P to continue";
 
-    private double textX, textY;
+    private final double textX;
+    private final double textY;
 
     public PauseOverlayDrawer(GameManager gm) {
         super(gm);

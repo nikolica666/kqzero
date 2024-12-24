@@ -7,6 +7,7 @@ import hr.nipeta.kqzero.gameobjects.GameObject;
 import hr.nipeta.kqzero.gameobjects.entities.Entity;
 import hr.nipeta.kqzero.gameobjects.items.behavior.ItemBehavior;
 import hr.nipeta.kqzero.gameobjects.items.behavior.NoopItemBehavior;
+import hr.nipeta.kqzero.world.WorldTile;
 import hr.nipeta.kqzero.world.tiles.Tile;
 import javafx.scene.paint.Color;
 
@@ -15,8 +16,8 @@ import java.util.Map;
 
 public abstract class Item extends GameObject {
 
-    public Item(GameManager gm, Double worldTileX, Double worldTileY) {
-        super(gm, worldTileX, worldTileY, new CollisionTolerance(0.1d));
+    public Item(GameManager gm, WorldTile worldTile) {
+        super(gm, worldTile, new CollisionTolerance(0.1d));
     }
 
     private final Map<Entity.Action, ItemBehavior> actionToBehavior = new HashMap<>();
@@ -42,12 +43,12 @@ public abstract class Item extends GameObject {
     @Override
     public final void draw() {
 
-        double relativeToPlayerX = gm.player.worldTileX - this.worldTileX;
+        double relativeToPlayerX = gm.player.tile.x - this.tile.x;
         if (Math.abs(relativeToPlayerX) > (double) gm.world.COLS_TOTAL / 2) {
             return;
         }
 
-        double relativeToPlayerY = gm.player.worldTileY - this.worldTileY;
+        double relativeToPlayerY = gm.player.tile.y - this.tile.y;
         if (Math.abs(relativeToPlayerY) > (double) gm.world.ROWS_TOTAL / 2) {
             return;
         }

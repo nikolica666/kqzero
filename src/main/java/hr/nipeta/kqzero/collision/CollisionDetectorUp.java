@@ -9,12 +9,12 @@ public class CollisionDetectorUp extends CollisionDetectorUpDown {
 
     @Override
     protected int calculateCurrentTileIndexAlongMovementAxis(Entity entity) {
-        return (int)Math.floor(entity.worldTileY + entity.collisionTolerance.top);
+        return (int)Math.floor(entity.tile.y + entity.collisionTolerance.top);
     }
 
     @Override
     protected int calculateNextTileIndexAlongMovementAxis(Entity entity, double tileDistanceTraveled) {
-        return (int)Math.floor(entity.worldTileY + entity.collisionTolerance.top - tileDistanceTraveled);
+        return (int)Math.floor(entity.tile.y + entity.collisionTolerance.top - tileDistanceTraveled);
     }
 
     @Override

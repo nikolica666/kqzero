@@ -28,7 +28,7 @@ public abstract class CollisionDetector {
         int nextTileIndexAlongMovementAxis = calculateNextTileIndexAlongMovementAxis(entity, tileDistanceTraveled);
 
         if (indexOutOfMap(world, nextTileIndexAlongMovementAxis)) {
-            // outside of map =  collision (e.g. for moving left it means X-coord after travel would be < 0)
+            // outside of map =  collision (e.g. for moving left it means x-coordinate after travel would be < 0)
             return true;
         }
 
@@ -117,8 +117,8 @@ abstract class CollisionDetectorUpDown extends CollisionDetector {
     @Override
     final protected TileIndices collisionAxisTileIndices(Entity entity) {
         return new TileIndices(
-                (int) (entity.worldTileX + entity.collisionTolerance.left),
-                (int) (entity.worldTileX + 1 - entity.collisionTolerance.right)
+                (int) (entity.tile.x + entity.collisionTolerance.left),
+                (int) (entity.tile.x + 1 - entity.collisionTolerance.right)
         );
     }
 
@@ -133,8 +133,8 @@ abstract class CollisionDetectorLeftRight extends CollisionDetector {
     @Override
     final protected TileIndices collisionAxisTileIndices(Entity entity) {
         return new TileIndices(
-                (int) (entity.worldTileY + entity.collisionTolerance.top),
-                (int) (entity.worldTileY + 1 - entity.collisionTolerance.bot)
+                (int) (entity.tile.y + entity.collisionTolerance.top),
+                (int) (entity.tile.y + 1 - entity.collisionTolerance.bot)
         );
     }
 

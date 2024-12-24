@@ -14,6 +14,7 @@ import hr.nipeta.kqzero.gameobjects.entities.neutral.Fish;
 import hr.nipeta.kqzero.gameobjects.entities.neutral.Neutral;
 import hr.nipeta.kqzero.gameobjects.items.*;
 import hr.nipeta.kqzero.world.World;
+import hr.nipeta.kqzero.world.WorldTile;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -70,28 +71,33 @@ public class GameManager {
         pauseDrawer = new PauseOverlayDrawer(this);
 
         world = new World(this, "/maps/map1.map");
-        player = new Player(this, 21, 21);
+        player = new Player(this, new WorldTile(21, 21));
 
         itemsOnMap = new ArrayList<>();
-        itemsOnMap.add(new Door(this, 16d, 2d));
-        itemsOnMap.add(new Door(this, 3d, 6d));
-        itemsOnMap.add(new Door(this, 4d, 9d));
+        itemsOnMap.add(new Door(this, new WorldTile(16d, 2d)));
+        itemsOnMap.add(new Door(this, new WorldTile(3d, 6d)));
+        itemsOnMap.add(new Door(this, new WorldTile(4d, 9d)));
 
         Random random = new Random();
         for (int i = 0; i < 700; i++) {
-            Coin coin = new Coin(this, (double)random.nextInt(world.COLS_TOTAL), (double)random.nextInt(world.ROWS_TOTAL));
+            WorldTile worldTile = new WorldTile(random.nextInt(world.COLS_TOTAL), random.nextInt(world.ROWS_TOTAL));
+            Coin coin = new Coin(this, worldTile);
             itemsOnMap.add(coin);
         }
 
         for (int i = 0; i < 300; i++) {
-            Key key = new Key(this, (double)random.nextInt(world.COLS_TOTAL), (double)random.nextInt(world.ROWS_TOTAL));
+            WorldTile worldTile = new WorldTile(random.nextInt(world.COLS_TOTAL), random.nextInt(world.ROWS_TOTAL));
+            Key key = new Key(this, worldTile);
             itemsOnMap.add(key);
         }
 
         for (int i = 0; i < 78; i++) {
             int worldX = random.nextInt(world.COLS_TOTAL);
             int worldY = random.nextInt(world.ROWS_TOTAL);
-            Tree tree = new Tree(this, worldX + new Random().nextDouble(.3), worldY + new Random().nextDouble(.3));
+            WorldTile worldTile = new WorldTile(
+                    worldX + new Random().nextDouble(.3),
+                    worldY + new Random().nextDouble(.3));
+            Tree tree = new Tree(this, worldTile);
             if (tree.isSpawnableOn(world.tiles[worldY][worldX])) {
                 itemsOnMap.add(tree);
             } else {
@@ -102,7 +108,11 @@ public class GameManager {
         for (int i = 0; i < 55; i++) {
             int worldX = random.nextInt(world.COLS_TOTAL);
             int worldY = random.nextInt(world.ROWS_TOTAL);
-            Pine tree = new Pine(this, worldX + new Random().nextDouble(.3), worldY + new Random().nextDouble(.3));
+            WorldTile worldTile = new WorldTile(
+                    worldX + new Random().nextDouble(.3),
+                    worldY + new Random().nextDouble(.3)
+            );
+            Pine tree = new Pine(this, worldTile);
             if (tree.isSpawnableOn(world.tiles[worldY][worldX])) {
                 itemsOnMap.add(tree);
             } else {
@@ -114,7 +124,7 @@ public class GameManager {
         for (int i = 0; i < 24; i++) {
             int worldX = random.nextInt(world.COLS_TOTAL);
             int worldY = random.nextInt(world.ROWS_TOTAL);
-            BlobLight blob = new BlobLight(this, worldX, worldY);
+            BlobLight blob = new BlobLight(this, new WorldTile(worldX, worldY));
             if (blob.collidesWith(world.tiles[worldY][worldX])) {
                 i--;
                 continue;
@@ -124,7 +134,7 @@ public class GameManager {
         for (int i = 0; i < 22; i++) {
             int worldX = random.nextInt(world.COLS_TOTAL);
             int worldY = random.nextInt(world.ROWS_TOTAL);
-            Scarecrow sc = new Scarecrow(this, worldX, worldY);
+            Scarecrow sc = new Scarecrow(this, new WorldTile(worldX, worldY));
             if (sc.collidesWith(world.tiles[worldY][worldX])) {
                 i--;
                 continue;
@@ -136,7 +146,7 @@ public class GameManager {
         for (int i = 0; i < 25; i++) {
             int worldX = random.nextInt(world.COLS_TOTAL);
             int worldY = random.nextInt(world.ROWS_TOTAL);
-            Fish f = new Fish(this, worldX, worldY);
+            Fish f = new Fish(this, new WorldTile(worldX, worldY));
             if (f.collidesWith(world.tiles[worldY][worldX])) {
                 i--;
                 continue;
@@ -147,7 +157,7 @@ public class GameManager {
         for (int i = 0; i < 21; i++) {
             int worldX = random.nextInt(world.COLS_TOTAL);
             int worldY = random.nextInt(world.ROWS_TOTAL);
-            Bird b = new Bird(this, worldX, worldY);
+            Bird b = new Bird(this, new WorldTile(worldX, worldY));
             if (b.collidesWith(world.tiles[worldY][worldX])) {
                 i--;
                 continue;
@@ -198,7 +208,7 @@ public class GameManager {
 
         long nano = System.nanoTime();
 
-        world.drawCenteredAt(player.worldTileX, player.worldTileY);
+        world.drawCenteredAt(player.tile);
         itemsOnMap.forEach(Item::draw);
         player.draw();
         enemies.forEach(Enemy::draw);
