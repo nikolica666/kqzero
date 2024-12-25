@@ -5,8 +5,7 @@ import hr.nipeta.kqzero.GameManager;
 import hr.nipeta.kqzero.collision.CollisionTolerance;
 import hr.nipeta.kqzero.gameobjects.GameObject;
 import hr.nipeta.kqzero.gameobjects.entities.Entity;
-import hr.nipeta.kqzero.gameobjects.items.behavior.ItemBehavior;
-import hr.nipeta.kqzero.gameobjects.items.behavior.NoopItemBehavior;
+import hr.nipeta.kqzero.gameobjects.items.behaviors.ItemBehavior;
 import hr.nipeta.kqzero.world.WorldTile;
 import hr.nipeta.kqzero.world.tiles.Tile;
 import javafx.scene.paint.Color;
@@ -30,7 +29,11 @@ public abstract class Item extends GameObject {
     }
 
     public void triggerBehavior(Entity.Action entityAction, Entity entity) {
-        actionToBehavior.getOrDefault(entityAction, new NoopItemBehavior()).applyTo(entity, gm);
+        ItemBehavior behavior = actionToBehavior.get(entityAction);
+        if (behavior == null) {
+            return;
+        }
+        behavior.applyTo(entity, gm);
     }
 
     public void removeBehaviour(Entity.Action entityAction) {
@@ -79,7 +82,7 @@ public abstract class Item extends GameObject {
     }
 
     public abstract boolean isSpawnableOn(Tile tile);
-
     public abstract boolean isSolid();
+    public abstract boolean isStackable();
 
 }

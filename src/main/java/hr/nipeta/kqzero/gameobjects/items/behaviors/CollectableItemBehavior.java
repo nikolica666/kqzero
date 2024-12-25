@@ -1,4 +1,4 @@
-package hr.nipeta.kqzero.gameobjects.items.behavior;
+package hr.nipeta.kqzero.gameobjects.items.behaviors;
 
 import hr.nipeta.kqzero.GameManager;
 import hr.nipeta.kqzero.gameobjects.entities.Entity;
@@ -19,9 +19,11 @@ public class CollectableItemBehavior implements ItemBehavior {
     @Override
     public void applyTo(Entity entity, GameManager gm) {
         if (entity instanceof Player player) {
-            player.addToInventory(collectableItem);
-            gm.itemsOnMap.remove(collectableItem);
-            gm.messageDrawer.addMessage(String.format("You collected new %s", collectableItem.getName()));
+            boolean addedToInventory = player.addToInventory(collectableItem);
+            if (addedToInventory) {
+                gm.itemsOnMap.remove(collectableItem);
+                gm.messageDrawer.addMessage(String.format("You collected new %s", collectableItem.getName()));
+            }
         }
     }
 

@@ -7,7 +7,6 @@ import hr.nipeta.kqzero.movement.traversal.FixedRandomTraversalStrategy;
 import hr.nipeta.kqzero.movement.traversal.TraversalStrategy;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @Builder
@@ -59,11 +58,9 @@ public final class Movement {
         this.currentDirectionDistance = 0;
     }
 
-    @Getter
-    @Setter
     public static class Speed {
         private double initial;
-        private double current;
+        @Getter private double current;
         private double min;
         private double max;
 

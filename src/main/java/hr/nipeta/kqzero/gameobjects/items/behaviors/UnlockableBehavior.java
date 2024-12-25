@@ -1,4 +1,4 @@
-package hr.nipeta.kqzero.gameobjects.items.behavior;
+package hr.nipeta.kqzero.gameobjects.items.behaviors;
 
 import hr.nipeta.kqzero.GameManager;
 import hr.nipeta.kqzero.gameobjects.entities.Entity;

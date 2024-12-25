@@ -15,9 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 public final class Player extends Entity {
@@ -30,9 +28,8 @@ public final class Player extends Entity {
         this.inventory = Inventory.empty();
     }
 
-    public void addToInventory(Item item) {
-        inventory.add(item);
-        log.debug("Item {} added to inventory", item);
+    public boolean addToInventory(Item item) {
+        return inventory.addToSlot(item);
     }
 
     @Override
@@ -140,14 +137,62 @@ public final class Player extends Entity {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     private static class Inventory {
 
-        private final List<Item> inventory;
+        private final List<ItemSlot> slots;
 
         private static Inventory empty() {
             return new Inventory(new ArrayList<>());
         }
 
-        public void add(Item item) {
-            inventory.add(item);
+        public boolean addToSlot(Item item) {
+            if (item.isStackable()) {
+                if (addToExistingSlot(item)) {
+                    return true;
+                } else {
+                    return addToNewSlot(item);
+                }
+            } else {
+                return addToNewSlot(item);
+            }
+
+        }
+
+        private boolean addToExistingSlot(Item item) {
+            // TODO max Inventory capacity
+            for (ItemSlot slot : slots) {
+                if (slot == null) {
+                    continue;
+                }
+                if (slot.accepts(item)) {
+                    slot.add(item);
+                    return true;
+                }
+            }
+
+            return false;
+
+        }
+
+        private boolean addToNewSlot(Item item) {
+            // TODO max Inventory capacity
+            ItemSlot newSlot = new ItemSlot();
+            newSlot.itemName = item.getName();
+            newSlot.items = new ArrayList<>();
+            newSlot.items.add(item);
+            slots.add(newSlot);
+            return true;
+        }
+
+        private static class ItemSlot {
+            private String itemName;
+            private List<Item> items;
+
+            public boolean accepts(Item item) {
+                return itemName.equals(item.getName()); // TODO equality by name, could be done better maybe
+            }
+
+            public void add(Item item) {
+                items.add(item);
+            }
         }
 
     }
