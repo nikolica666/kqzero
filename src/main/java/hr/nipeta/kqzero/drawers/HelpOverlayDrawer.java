@@ -15,7 +15,9 @@ public class HelpOverlayDrawer extends OverlayDrawer {
             "W = move up",
             "S = move down",
             "A = move left",
-            "D = move right");
+            "D = move right",
+            "I = inventory",
+            "P = pause");
 
     public HelpOverlayDrawer(GameManager gm) {
         super(gm);

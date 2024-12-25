@@ -6,40 +6,53 @@ import hr.nipeta.kqzero.collision.CollisionTolerance;
 import hr.nipeta.kqzero.gameobjects.GameObject;
 import hr.nipeta.kqzero.gameobjects.entities.Entity;
 import hr.nipeta.kqzero.gameobjects.items.behaviors.ItemBehavior;
+import hr.nipeta.kqzero.gameobjects.items.stack.StackStrategy;
 import hr.nipeta.kqzero.world.WorldTile;
 import hr.nipeta.kqzero.world.tiles.Tile;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public abstract class Item extends GameObject {
 
     public Item(GameManager gm, WorldTile worldTile) {
+        this(gm, worldTile, null);
+    }
+
+    public Item(GameManager gm, WorldTile worldTile, StackStrategy stackStrategy) {
         super(gm, worldTile, new CollisionTolerance(0.1d));
+        this.stackStrategy = stackStrategy;
+    }
+
+    private final StackStrategy stackStrategy;
+    public StackStrategy getStackStrategy() {
+        if (stackStrategy == null) {
+            throw new NullPointerException("Stack strategy is not defined");
+        }
+        return stackStrategy;
     }
 
     private final Map<Entity.Action, ItemBehavior> actionToBehavior = new HashMap<>();
 
     public void addBehavior(Entity.Action entityAction, ItemBehavior behavior) {
-        if (actionToBehavior.containsKey(entityAction)) {
+        if (actionToBehavior.putIfAbsent(entityAction, behavior) != null) {
             throw new IllegalArgumentException(String.format("EntityAction '%s' is already mapped", entityAction));
         }
-        actionToBehavior.put(entityAction, behavior);
     }
 
     public void triggerBehavior(Entity.Action entityAction, Entity entity) {
         ItemBehavior behavior = actionToBehavior.get(entityAction);
-        if (behavior == null) {
-            return;
+        if (behavior != null) {
+            behavior.applyTo(entity, gm);
         }
-        behavior.applyTo(entity, gm);
     }
 
     public void removeBehaviour(Entity.Action entityAction) {
         ItemBehavior removedBehavior = actionToBehavior.remove(entityAction);
         if (removedBehavior == null) {
-            throw new IllegalArgumentException(String.format("EntityAction '%s' is not mapped mapped", entityAction));
+            throw new IllegalArgumentException(String.format("EntityAction '%s' is not mapped", entityAction));
         }
     }
 
@@ -83,6 +96,5 @@ public abstract class Item extends GameObject {
 
     public abstract boolean isSpawnableOn(Tile tile);
     public abstract boolean isSolid();
-    public abstract boolean isStackable();
 
 }

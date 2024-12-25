@@ -135,7 +135,7 @@ public final class Player extends Entity {
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    private static class Inventory {
+    public static class Inventory {
 
         private final List<ItemSlot> slots;
 
@@ -144,7 +144,7 @@ public final class Player extends Entity {
         }
 
         public boolean addToSlot(Item item) {
-            if (item.isStackable()) {
+            if (item.getStackStrategy().canStack()) {
                 if (addToExistingSlot(item)) {
                     return true;
                 } else {
@@ -153,7 +153,6 @@ public final class Player extends Entity {
             } else {
                 return addToNewSlot(item);
             }
-
         }
 
         private boolean addToExistingSlot(Item item) {
@@ -162,7 +161,7 @@ public final class Player extends Entity {
                 if (slot == null) {
                     continue;
                 }
-                if (slot.accepts(item)) {
+                if (slot.accepts(item) && slot.currentStackSize() < item.getStackStrategy().getMaxStackSize()) {
                     slot.add(item);
                     return true;
                 }
@@ -175,6 +174,7 @@ public final class Player extends Entity {
         private boolean addToNewSlot(Item item) {
             // TODO max Inventory capacity
             ItemSlot newSlot = new ItemSlot();
+            newSlot.itemClass = item.getClass();
             newSlot.itemName = item.getName();
             newSlot.items = new ArrayList<>();
             newSlot.items.add(item);
@@ -182,12 +182,18 @@ public final class Player extends Entity {
             return true;
         }
 
-        private static class ItemSlot {
+        @Getter
+        public static class ItemSlot {
+            private Class<? extends Item> itemClass;
             private String itemName;
             private List<Item> items;
 
             public boolean accepts(Item item) {
                 return itemName.equals(item.getName()); // TODO equality by name, could be done better maybe
+            }
+
+            public int currentStackSize() {
+                return items.size();
             }
 
             public void add(Item item) {

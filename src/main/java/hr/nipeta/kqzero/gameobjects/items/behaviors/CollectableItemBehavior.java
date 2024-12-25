@@ -6,7 +6,9 @@ import hr.nipeta.kqzero.gameobjects.entities.Player;
 import hr.nipeta.kqzero.gameobjects.items.Item;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CollectableItemBehavior implements ItemBehavior {
 
@@ -21,6 +23,10 @@ public class CollectableItemBehavior implements ItemBehavior {
         if (entity instanceof Player player) {
             boolean addedToInventory = player.addToInventory(collectableItem);
             if (addedToInventory) {
+                log.debug("Inventory is:");
+                player.getInventory().getSlots().forEach(slot -> {
+                    log.debug("{} with {} items", slot.getItemName(), slot.getItems().size());
+                });
                 gm.itemsOnMap.remove(collectableItem);
                 gm.messageDrawer.addMessage(String.format("You collected new %s", collectableItem.getName()));
             }

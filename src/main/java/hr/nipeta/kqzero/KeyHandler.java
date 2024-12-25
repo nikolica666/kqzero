@@ -28,12 +28,28 @@ public class KeyHandler implements EventHandler<KeyEvent> {
     private void handleKeyPress(KeyEvent event) {
         switch (event.getCode()) {
             case W,A,S,D -> activeMovementKeys.add(event.getCode());
+
             // TODO Refactoring needed most likely...
             case P -> {
                 gm.pauseDrawer.toggleDrawEnabled();
                 gm.gameLoop.toggleLoopPlay();
                 if (!gm.gameLoop.isPlaying()) {
                     gm.pauseDrawer.draw();
+                }
+            }
+
+            case I -> {
+                gm.inventoryOverlayDrawer.toggleDrawEnabled();
+                // TODO this should be moved somewhere else probably... we're only covering case when game is paused
+                if (!gm.gameLoop.isPlaying()) {
+                    // Draw popup only
+                    if (gm.inventoryOverlayDrawer.isDrawEnabled()) {
+                        gm.inventoryOverlayDrawer.draw();
+                    }
+                    // Redraw everything to remove popup (to cover game loop stopped scenario)
+                    else {
+                        gm.draw(); // TODO with secondary canvas we can optimize (no need to redraw all then)
+                    }
                 }
             }
             case F1 -> {

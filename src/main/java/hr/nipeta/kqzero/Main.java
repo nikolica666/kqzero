@@ -26,10 +26,12 @@ public class Main extends Application {
 
     public static class Fonts {
 
+        public static Font REGULAR_24;
         public static Font REGULAR_32;
         public static Font REGULAR_48;
 
         private static void init() {
+            REGULAR_24 = loadFont("/fonts/perfect-dos/perfect-dos-vga-437-Regular.ttf", 24);
             REGULAR_32 = loadFont("/fonts/perfect-dos/perfect-dos-vga-437-Regular.ttf", 32);
             REGULAR_48 = loadFont("/fonts/perfect-dos/perfect-dos-vga-437-Regular.ttf", 48);
         }

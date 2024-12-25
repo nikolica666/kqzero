@@ -140,6 +140,10 @@ public class SpriteManager {
         return ITEM_SPRITES.get(item.getClass());
     }
 
+    public Image getItem(Class<? extends Item> clazz) {
+        return ITEM_SPRITES.get(clazz);
+    }
+
     @AllArgsConstructor
     @Getter
     public static class SpriteSheetResult {
